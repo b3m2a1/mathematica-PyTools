@@ -178,17 +178,7 @@ Big data automatically routes through a temporary file. For example:
 
 	(*Out:*)
 	
-	\!\(
-	TagBox[
-	RowBox[{"{", 
-	RowBox[{
-	RowBox[{"{", 
-	RowBox[{"0.8293568068877437`", ",", "0.4935766175806856`", ",", 
-	RowBox[{"<<", "97", ">>"}], ",", "0.22342827675348897`"}], "}"}], ",", 
-	RowBox[{"<<", "98", ">>"}], ",", 
-	RowBox[{"{", 
-	RowBox[{"<<", "1", ">>"}], "}"}]}], "}"}],
-	Short]\)
+ ![title-7501413158111774981](project/img/title-7501413158111774981.png)
 
 ---
 
