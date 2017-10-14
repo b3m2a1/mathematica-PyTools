@@ -36,7 +36,8 @@ Options[PySessionStart]=
 	  "Version"->Automatic,
 		"PythonConfig"->{"-i"},
 		"ShellConfig"->{},
-		"MetaInfo"->{}
+		"MetaInfo"->{},
+		"MakeEnvironment"->False
 	  },
 	 Options[StartProcess]
 	 ];
@@ -214,11 +215,23 @@ pySessionCreateProcessObject[
  {
  	True (* Use shell *),
 	 s_String (* Use venv *),
-	 Except[_String] (* No version *)
+	 (*Except[_String]*) _ (* Ignore version *)
 	 }, 
  ops:OptionsPattern[]
  ]:=
- Replace[VenvDir[s],
+ Replace[
+ 	Replace[
+ 		VenvDir[s],
+ 		e:Except[_String]:>
+ 			If[OptionValue["MakeEnvironment"]//TrueQ,
+ 				VenvNew[s,
+ 					FilterRules[{ops},
+ 						Options[VenvNew]
+ 						]
+ 					],
+ 				e
+ 				]
+ 		],
  	{
   	d_String:>
   		{
@@ -226,14 +239,25 @@ pySessionCreateProcessObject[
   				With[
 	  				{
 		  				po = 
-		  					StartProcess[Flatten@{
- 								$SystemShell,
- 								shSessionConfig[ops]
-					 			}, 
-					 			FilterRules[{ops},
-					 				Options@StartProcess
-					 				]
-								]
+		  					StartProcess[
+	  							Flatten@{
+	  								$SystemShell,
+		  							shSessionConfig[ops]
+		  							},
+									FilterRules[
+ 									{
+ 										ops,
+					 					If[$OperatingSystem=!="Windows",
+					 						ProcessEnvironment->
+						 						<|
+						 							"PATH"->$pySessionPathExtension<>Environment["PATH"]
+						 							|>,
+						 					Nothing
+						 					]
+					 					},
+						 			Options@StartProcess
+						 			]
+									]
 		  				},
 		  			WriteLine[po,
 		  				StringRiffle[{
@@ -241,7 +265,8 @@ pySessionCreateProcessObject[
 		  					"cd "<>d,
 		  					"source bin/activate",
 		  					"cd $_dir"
-		  					}]
+		  					},
+		  					"\n"]
 		  				];
 		  			po
 		  			],
@@ -260,8 +285,20 @@ pySessionCreateProcessObject[
  ]:=
  {
  	"Process"->
-	 	With[{ po = pySessionCreateProcessObject[True, s, None, ops]},
-	 		WriteLine[po, "python"];
+	 	With[
+	 		{ 
+	 			po = 
+			 		Replace[pySessionCreateProcessObject[{True, s, None}, ops],
+			 			a_?OptionQ:>Lookup[a,"Process"]
+			 			]
+		 		},
+	 		WriteLine[po, 
+				StringRiffle@
+					Flatten@{
+						"python",
+						pySessionConfig[ops]
+						}
+				];
 		 	po
 		 	],
 	"Type"->"PythonInterpreter"
@@ -278,8 +315,20 @@ pySessionCreateProcessObject[
  ]:=
  {
  	"Process"->
-		 With[{ po = pySessionCreateProcessObject[True, s, None, ops]},
-		 	WriteLine[po, If[StringMatchQ[v, NumberString], "python"<>v, v]<>" -i"];
+		 With[
+			 { 
+			 	po = 
+				 	Replace[pySessionCreateProcessObject[{True, s, None}, ops],
+			 			a_?OptionQ:>Lookup[a,"Process"]
+			 			]
+					},
+		 	WriteLine[po, 
+				StringRiffle@
+					Flatten@{
+						If[StringMatchQ[v, NumberString], "python"<>v, v],
+						pySessionConfig[ops]
+						}
+				];
 		 	po
 		 	],
  	"Type"->"PythonInterpreter"

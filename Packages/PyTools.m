@@ -102,18 +102,21 @@ PyRun::tb="``";
 PyRun[code_,
 	ops:OptionsPattern[]
 	]:=
+	Catch@
 	Block[{$eMExport},
-		With[{sesh=
-			If[TrueQ@OptionValue["UseSession"],
-				PyRunSession[ops,
-					"MakeSession"->True
-					],
-				PySessionStart[
-					CreateUUID["python-session-"],
-					FilterRules[{ops}, Options[PySessionStart]]
+		With[
+			{sesh=
+				If[TrueQ@OptionValue["UseSession"],
+					PyRunSession[ops,
+						"MakeSession"->True
+						],
+					PySessionStart[
+						CreateUUID["python-session-"],
+						FilterRules[{ops}, Options[PySessionStart]]
+						]
 					]
-				]
-			},
+				},
+			If[sesh===$Failed, Throw[sesh]];
 			Function[
 				If[!TrueQ@OptionValue["UseSession"]||TrueQ@OptionValue["KillSession"],
 					PySessionRemove[sesh["Name"]]
@@ -133,7 +136,7 @@ PyRun[code_,
 							If[StringLength[r["StandardError"]]>0,
 								Message[PyRun::stderr, r["StandardError"]]
 								];
-							r["StandardOutput"],
+							r["StandardOutput"]//If[StringLength[#]>0,#,Null]&,
 							r
 							]
 						],
@@ -147,7 +150,7 @@ PyRun[code_,
 							];
 						If[OptionValue["ParseOutput"]&&$eMExport//TrueQ,
 							r["StandardOutput"]//PyMExportParse,
-							r["StandardOutput"]
+							r["StandardOutput"]//If[StringLength[#]>0,#,Null]&
 							],
 						If[OptionValue["ParseOutput"]&&$eMExport//TrueQ,
 							ReplacePart[r,
@@ -293,7 +296,9 @@ PyInstall[pkg_, ops:OptionsPattern[]]:=
 			FilterRules[
 				{
 					ops,
-					"SystemShell"->True
+					"SystemShell"->True,
+					"WaitFor"->All,
+					TimeConstraint->None
 					},
 				Options[PyRun]
 				]
