@@ -69,6 +69,9 @@ PySessionStart[name:Except[_?OptionQ],
   }]
 
 
+pySessionCreateProcessObject//Clear
+
+
 Options[pySessionCreateProcessObject]=
 	Options[PySessionStart]
 
@@ -117,8 +120,8 @@ $pySessionPathExtension=
 pySessionCreateProcessObject[
  {
 	 Except[True] (* No shell *),
-	 Except[_String] (* No venv *),
-	 Except[_String] (* No version *)
+	 Except[_String?(StringLength[#]>0&)] (* No venv *),
+	 Except[_String?(StringLength[#]>0&)] (* No version *)
 	 }, 
  ops:OptionsPattern[]
  ]:=
@@ -150,8 +153,8 @@ pySessionCreateProcessObject[
 pySessionCreateProcessObject[
 	{
 		Except[True] (* No shell *),
-		Except[_String] (* No venv *),
-		s_String (* Use version *)
+		Except[_String?(StringLength[#]>0&)] (* No venv *),
+		s_String?(StringLength[#]>0&) (* Use version *)
 		}, 
 	ops:OptionsPattern[]
 	]:=
@@ -182,7 +185,7 @@ pySessionCreateProcessObject[
 pySessionCreateProcessObject[
  {
 	 True (* Use shell *),
-	 Except[_String] (* No venv *),
+	 Except[_String?(StringLength[#]>0&)] (* No venv *),
 	 _ (* Ignore version *)
 	 }, 
  ops:OptionsPattern[]
@@ -214,7 +217,7 @@ pySessionCreateProcessObject[
 pySessionCreateProcessObject[
  {
  	True (* Use shell *),
-	 s_String (* Use venv *),
+	 s_String?(StringLength[#]>0&) (* Use venv *),
 	 (*Except[_String]*) _ (* Ignore version *)
 	 }, 
  ops:OptionsPattern[]
@@ -278,8 +281,8 @@ pySessionCreateProcessObject[
 pySessionCreateProcessObject[
  {
 	 False (* Use shell *),
-	 s_String (* Use venv *),
-	 Except[_String] (* No version *)
+	 s_String?(StringLength[#]>0&) (* Use venv *),
+	 Except[_String?(StringLength[#]>0&)] (* No version *)
 	 }, 
  ops:OptionsPattern[]
  ]:=
@@ -308,8 +311,8 @@ pySessionCreateProcessObject[
 pySessionCreateProcessObject[
  {
 	 False (* Use shell *),
-	 s_String (* Use venv *),
-	 v_String (* Use version *)
+	 s_String?(StringLength[#]>0&) (* Use venv *),
+	 v_String?(StringLength[#]>0&) (* Use version *)
 	 }, 
  ops:OptionsPattern[]
  ]:=

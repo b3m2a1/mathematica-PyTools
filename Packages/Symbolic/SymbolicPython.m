@@ -1562,9 +1562,10 @@ PyAlias@(struct_?SymbolicPythonQ)[a___][b___][c___][d___]:=
 $PySymbolsContext=$Context;
 
 
-$PyLangTranslations={
+$PyLangTranslations=Dispatch@{
 
 	Equal->PyEqual,
+	Rule->Rule (* Just protecting it from later replacement *),
 	SameQ->PyIs,
 	Less->PyLess,
 	LessEqual->PyLessEqual,
@@ -1686,12 +1687,16 @@ $PyLangTranslations={
 	HoldPattern@If[test_,if_,else_]:>
 		PyIfElse[test][if,else],
 		
-	HoldPattern[Import[f_]]:>
+	HoldPattern[Import[f_->v_->a_]]:>
+		PyFromImportAs[f,v,a],
+	HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]->v_]]:>
+		PyImportAs[f,v],
+	HoldPattern[Import[(Dot|PyDot)[f_,v_]]]:>
+		PyFromImport[f,v],
+	HoldPattern[Import[(Dot|PyDot)[f_,v_]->a_]]:>
+		PyFromImportAs[f,v,a],
+	HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]]]:>
 		PyImport[f],
-	HoldPattern[Import[f_,a_]]:>
-		PyImportAs[f,a],
-	HoldPattern[Import[f_,i_,a_]]:>
-		PyFromImportAs[f,i,a],
 		
 	HoldPattern[For[init_,test_,inc_,do_]]:>
 		(init;While[test,do;inc]),
@@ -1716,32 +1721,54 @@ $PyLangTranslations={
 	};
 
 
+$PyLangTranslationSymbols=
+	Replace[Keys[Normal@$PyLangTranslations],
+		{
+			Verbatim[HoldPattern][s_[___]]:>s,
+			s_Symbol:>s,
+			_->Nothing
+			},
+		1]
+
+
 ToSymbolicPython[symbols:{___Symbol}:{},expr_]:=
 	With[{syms=
 		Replace[
 			Thread@Hold[symbols],
 			Hold[s_]:>(HoldPattern[s]->PySymbol[SymbolName[Unevaluated@s]]),
-			1]
+			1],
+		trfPat=
+			MatchQ[Alternatives@@$PyLangTranslationSymbols],
+		ptCont=
+			$PackageName<>"`*"
 		},
 		ReleaseHold[
 			ReplaceRepeated[
 				Hold[expr]/.
-					Join[syms,{
-						p_PyString:>p,
-						s_String?(Not@StringMatchQ[#,(WordCharacter|"_"|".")..]&):>
-							RuleCondition[
-								PyString[s,
-									If[Length@StringSplit[s,EndOfLine]>1,
-										"'''",
-										"'"
-										]
-									],
-								True
-								]
-						}]/.
+					Join[syms,
+						{
+							p_PyString:>p (* Protects the inner string from further replacement *),
+							HoldPattern[String[s_]]:>PyString[s],
+							s_String?(Not@StringMatchQ[#,(WordCharacter|"_"|".")..]&):>
+								RuleCondition[
+									PyString[s,
+										If[Length@StringSplit[s,EndOfLine]>1,
+											"'''",
+											"'"
+											]
+										],
+									True
+									]
+							}
+						]/.
 					s_Symbol?(
 						Function[Null, 
-							!StringMatchQ[Context[#],"System`"|Context[ToPython]],
+							!StringMatchQ[Context[#],ptCont]&&
+							!trfPat[#]&&(
+							System`Private`HasDownCodeQ[#]||
+							System`Private`HasUpCodeQ[#]||
+							!StringMatchQ[Context[#],"System`*"]
+							),
 							HoldAllComplete
 							]):>
 						PySymbol[s],

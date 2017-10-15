@@ -6,10 +6,15 @@ PyRun::usage=
 	"Runs python code and returns a string of the result";
 PyInstall::usage=
 	"Runs pip to install a package";
+PyStatus::usage=
+	"Returns session data from PyRunSession";
+PyNewShell::usage=
+	"Creates a new python shell notebook";
 
 
 PackageScopeBlock[
-	$PyRunLastCompiled;
+	$PyRunLastCompiled::usage="Last compiled code";
+	$PyRunLastError::usage="Last error thrown";
 	PyRunSession::usage="Session used by PyRun";
 	PyRunSessionBuildName::usage="Session name used by PyRun";
 	];
@@ -27,7 +32,8 @@ Options[PyRun]=
 			"EchoCode"->False,
 			"PrintTraceback"->True,
 			"PrintStdErr"->True,
-			"ParseOutput"->True
+			"ParseOutput"->True,
+			"AddHeader"->True
 			},
 		Options[PySessionStart],
 		Options[PySessionRun]
@@ -103,7 +109,6 @@ PyRun[code_,
 	ops:OptionsPattern[]
 	]:=
 	Catch@
-	Block[{$eMExport},
 		With[
 			{sesh=
 				If[TrueQ@OptionValue["UseSession"],
@@ -124,7 +129,7 @@ PyRun[code_,
 				#
 				]@
 			If[sesh["SystemShell"]//TrueQ,
-				If[StringQ[code],
+				If[StringQ[Unevaluated@code],
 					With[{
 						r=
 							iPyRun[Verbatim[code],
@@ -134,6 +139,7 @@ PyRun[code_,
 						},
 						If[TrueQ@OptionValue["PrintStdErr"],
 							If[StringLength[r["StandardError"]]>0,
+								$PyRunLastError=r["StandardError"];
 								Message[PyRun::stderr, r["StandardError"]]
 								];
 							r["StandardOutput"]//If[StringLength[#]>0,#,Null]&,
@@ -146,13 +152,22 @@ PyRun[code_,
 				With[{r=iPyRun[code,sesh,ops]},
 					If[TrueQ@OptionValue["PrintTraceback"],
 						If[StringLength[r["StandardError"]]>0,
+							$PyRunLastError=r["StandardError"];
 							Message[PyRun::tb, StringTrim@r["StandardError"]]
 							];
-						If[OptionValue["ParseOutput"]&&$eMExport//TrueQ,
+						If[OptionValue["ParseOutput"]&&
+								StringContainsQ[r["StandardOutput"],
+									(StartOfLine|StartOfString)~~$PyExportKey~~
+										(EndOfLine|EndOfString)
+									],
 							r["StandardOutput"]//PyMExportParse,
 							r["StandardOutput"]//If[StringLength[#]>0,#,Null]&
 							],
-						If[OptionValue["ParseOutput"]&&$eMExport//TrueQ,
+						If[OptionValue["ParseOutput"]&&
+								StringContainsQ[r["StandardOutput"],
+									(StartOfLine|StartOfString)~~$PyExportKey~~
+										(EndOfLine|EndOfString)
+									],
 							ReplacePart[r,
 								"StandardOutput"->
 									PyMExportParse[r["StandardOutput"]]
@@ -162,8 +177,7 @@ PyRun[code_,
 						]
 					]
 				]
-			]
-		]
+			];
 
 
 Options[iPyRun]=
@@ -173,12 +187,22 @@ Options[iPyRun]=
 iPyRun~SetAttributes~HoldFirst
 
 
+ToPython (* Load all that symbolics stuff *)
+
+
 iPyRun[Verbatim[Verbatim][code:_String|_List],
 	sesh_,
 	ops:OptionsPattern[]
 	]:=
 	PySessionRun[sesh["Name"],
-		code,
+		If[sesh["Type"]==="PythonInterpreter"&&OptionValue["AddHeader"]//TrueQ,
+			ToPython@
+				PyColumn[{
+					$PyRunHeader,
+					code
+					}],
+			code
+			],
 		FilterRules[{ops}, Options[PySessionRun]]
 		]
 
@@ -191,11 +215,6 @@ iPyRunCompilePrepDefer~SetAttributes~HoldAllComplete;
 
 iPyRunCompilePrep[code_]:=
 	ToSymbolicPython@@
-	Replace[Hold[expr_]:>
-		With[{ph=$PyRunHeader},
-			Hold[ph;expr]
-			]
-		]@
 	ReplaceAll[
 		iPyRunCompilePrepDefer[e_]:>e
 		]@
@@ -208,7 +227,6 @@ iPyRunCompilePrep[code_]:=
 			}],{
 				PyMExport[a_]:>
 					RuleCondition[
-						$eMExport=True;
 						iPyRunCompilePrepDefer@
 							PyCall[PyDot["MLib","mathematica_export"]][a],
 						True
@@ -221,6 +239,16 @@ iPyRunCompilePrep[code_]:=
 			}
 		];
 iPyRunCompilePrep~SetAttributes~HoldFirst
+
+
+iPyRun[RunThrough[f_?FileExistsQ],
+	sesh_,
+	ops:OptionsPattern[]
+	]:=
+	iPyRun[Evaluate@Verbatim@Import[f,"Text"],
+		sesh,
+		ops
+		]
 
 
 iPyRun[code_,
@@ -254,15 +282,15 @@ iPyRun[code_,
 Options[PyInstall]=
 	Join[
 		Options[PyRun],
-		{
-			"SuperUser"->False,
+		{(*
+			"SuperUser"\[Rule]False,*)
 			"Upgrade"->False
 			}
 		];
 PyInstall[pkg_, ops:OptionsPattern[]]:=
 	With[{
 		suinfo=
-			Replace[OptionValue["SuperUser"], {
+			Replace[None(*OptionValue["SuperUser"]*), {
 				True -> {"", ""},
 				s_String :> {s, ""},
 				su:{_String, _String}:>su,
@@ -276,9 +304,12 @@ PyInstall[pkg_, ops:OptionsPattern[]]:=
 					If[StringQ[suinfo[[1]]],
 						Switch[$OperatingSystem,
 							"MacOSX",
-								"su -l "<>suinfo[[1]]<>"\n '"<>#<>"'",
+								"su -l "<>suinfo[[1]]<>" "<>
+									If[StringQ[suinfo[[2]]],suinfo[[2]],""]<>"\n"<>
+										""<>#<>""//Echo,
 							_,
-								"su -c "<>"'"<>#<>"'"
+								"su -c "<>"'"<>#<>"'"<>"\n "<>
+									If[StringQ[suinfo[[2]]],suinfo[[2]],""]
 							],
 							#]&@
 					"pip"<>
@@ -287,8 +318,7 @@ PyInstall[pkg_, ops:OptionsPattern[]]:=
 							n_?NumberQ:>ToString[n],
 							_->""
 							}]<>
-						" install "<>If[OptionValue["Upgrade"]//TrueQ,"--upgrade ",""]<>pkg,
-					If[StringQ[suinfo[[2]]],suinfo[[2]],""]
+						" install "<>If[OptionValue["Upgrade"]//TrueQ,"--upgrade ",""]<>pkg
 					},
 					"\n"
 					]
@@ -303,6 +333,67 @@ PyInstall[pkg_, ops:OptionsPattern[]]:=
 				Options[PyRun]
 				]
 			]
+		]
+
+
+pyStatus[a_]:=
+	<|
+		"Status"->ProcessStatus@a["Process"],
+		"Name"->a["Name"],
+		"MetaInfo"->a["MetaInfo"],
+		"Type"->a["Type"]
+		|>
+
+
+Options[PyStatus]=
+	Options[PyRun]
+PyStatus[fmt:True|False:True,ops:OptionsPattern[]]:=
+	If[fmt, Dataset, Identity]@
+		Replace[PyRunSession[ops],{
+			None->
+				<|
+					"Status"->None,
+					"Name"->None,
+					"Type"->None,
+					"MetaInfo"->{}
+					|>,
+			a_:>pyStatus[a]
+			}]
+
+
+Options[PyNewShell]=
+	Join[
+		Options[PyRun],
+		Options[CreateDocument]
+		];
+PyNewShell[
+	exprs:Except[_?OptionQ]:{},
+	ops:OptionsPattern[]
+	]:=
+	With[{
+		d=
+			CreateDocument[exprs,
+				FilterRules[
+					{
+						Visible->False,
+						ops,
+						WindowTitle->"Python Shell",
+						System`ClosingSaveDialog->False
+						},
+					Options[CreateDocument]
+					]
+				]
+		},
+		CurrentValue[d, {TaggingRules, "PyShellOptions"}]=
+			FilterRules[{ops}, Options[PyRun]];
+		SetOptions[d,{
+		 	Visible->
+		 		Replace[OptionValue[Visible], Except[False]->True],
+		 	StyleDefinitions->
+		 		FrontEnd`FileName[{"PyTools"}, "PythonShell.nb"]
+		 	}];
+		SetSelectedNotebook[d];
+		d
 		]
 
 

@@ -1,0 +1,796 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     34672,        788]
+NotebookOptionsPosition[     29926,        697]
+NotebookOutlinePosition[     30685,        723]
+CellTagsIndexPosition[     30642,        720]
+WindowTitle->PythonShell
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[StyleData[StyleDefinitions -> "Default.nb"],ExpressionUUID->"e9cd52df-cc47-4fb1-ab47-70527d186062"],
+
+Cell[CellGroupData[{
+
+Cell["Notebook", "Subsection",
+ CellChangeTimes->{{3.717026747143031*^9, 
+  3.717026749359735*^9}},ExpressionUUID->"f4c1607f-c74a-4240-a43e-\
+76d2ebee1417"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", "\"\<Notebook\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.717026740742741*^9, 
+  3.717026744079577*^9}},ExpressionUUID->"6e6810e2-db1d-4dbb-a329-\
+a0575d5dddad"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["Notebook"],
+ PageWidth->DirectedInfinity[1],
+ DockedCells->Cell[
+   BoxData[
+    FrameBox[
+     TagBox[
+      GridBox[{{
+        "\"Version\"", "\"Virtual Environment\"", "\"Use Session\"", "\"\""}, {
+         InputFieldBox[
+          Dynamic[
+           CurrentValue[
+            EvaluationNotebook[], {TaggingRules, "PyShellOptions", "Version"},
+             ""]], String, FieldSize -> 5], 
+         InputFieldBox[
+          Dynamic[
+           CurrentValue[
+            EvaluationNotebook[], {
+            TaggingRules, "PyShellOptions", "VirtualEnvironment"}, ""]], 
+          String, FieldSize -> 10], 
+         PopupMenuBox[
+          Dynamic[
+           CurrentValue[
+            EvaluationNotebook[], {
+            TaggingRules, "PyShellOptions", "UseSession"}, True]], {
+          True -> "True", False -> "False"}], 
+         ButtonBox[
+          DynamicBox[
+           ToBoxes[PythonShell`Private`trackme; If[PyTools`PyStatus[False, 
+                CurrentValue[
+                 EvaluationNotebook[], {TaggingRules, "PyShellOptions"}, {
+                 "UseSession" -> True}]]["Status"] === "Running", 
+              "Kill Session", "Start Session"], StandardForm]], 
+          ButtonFunction :> With[{$CellContext`ops = CurrentValue[
+               EvaluationNotebook[], {TaggingRules, "PyShellOptions"}, {
+               "UseSession" -> True}]}, 
+            
+            With[{$CellContext`stat = 
+              PyTools`PyStatus[False, $CellContext`ops]}, 
+             
+             If[$CellContext`stat["Status"] === "Running", 
+              PyTools`Sessions`PySessionRemove[
+                $CellContext`stat["Name"]]; 
+              PythonShell`Private`trackme = RandomReal[], 
+              PyTools`Private`Hidden`PyRunSession[
+                Prepend[$CellContext`ops, "MakeSession" -> True]]; 
+              PythonShell`Private`trackme = RandomReal[]]]], Enabled -> 
+          Dynamic[
+            TrueQ[
+             CurrentValue[
+              EvaluationNotebook[], {
+              TaggingRules, "PyShellOptions", "UseSession"}, True]]], 
+          Appearance -> Automatic, Evaluator -> Automatic, Method -> 
+          "Preemptive"]}}, AutoDelete -> False, 
+       GridBoxItemSize -> {
+        "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, BaseStyle -> 
+       "PyShellGrid"], "Grid"], BaseStyle -> "PyShellGrid", StripOnInput -> 
+     False]], Background -> Dynamic[
+     With[{$CellContext`sops = CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "PyShellOptions"}, {
+         "UseSession" -> True}]}, PythonShell`Private`trackme; 
+      Needs["PyTools`"]; If[
+        TrueQ[
+         Lookup[$CellContext`sops, "UseSession"]], 
+        If[PyTools`PyStatus[False, $CellContext`sops]["Status"] === "Running", 
+         Hue[0.6, 0.5, 0.5], 
+         Hue[0, 1, 0.8]], 
+        GrayLevel[0.4]]]]],
+ DefaultNewCellStyle->
+  "PythonInput",ExpressionUUID->"5bcf475f-a8a1-4a3d-9fcb-fb356d9bb831"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<Notebook\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+     "DefaultNewCellStyle", "\[Rule]", "\[IndentingNewLine]", 
+      "\"\<PythonInput\>\""}], ",", "\[IndentingNewLine]", 
+     RowBox[{"PageWidth", "\[Rule]", "Infinity"}]}], "\[IndentingNewLine]", 
+    "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.71703063937064*^9, 3.717030682236364*^9}, {
+  3.717035289662444*^9, 
+  3.7170352908267517`*^9}},ExpressionUUID->"789d91e5-1170-47ed-b866-\
+7dc2f1c783aa"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["DockedCells", "Subsubsection",
+ CellChangeTimes->{{3.717030631970409*^9, 
+  3.7170306338832273`*^9}},ExpressionUUID->"c6d02979-7303-42d5-a906-\
+af8493c4f723"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<Notebook\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"DockedCells", "\[Rule]", "\[IndentingNewLine]", 
+     RowBox[{"Cell", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"BoxData", "@", "\[IndentingNewLine]", 
+        RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
+         RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Grid", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Transpose", "@", "\[IndentingNewLine]", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"\"\<Version\>\"", ",", "\[IndentingNewLine]", 
+                  RowBox[{"InputField", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "TaggingRules", ",", " ", "\"\<PyShellOptions\>\"", ",", 
+                    "\"\<Version\>\""}], "}"}], ",", "\[IndentingNewLine]", 
+                    "\"\<\>\""}], "\[IndentingNewLine]", "]"}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                    "String", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FieldSize", "\[Rule]", "5"}]}], 
+                   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                 "}"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                 "\"\<Virtual Environment\>\"", ",", "\[IndentingNewLine]", 
+                  RowBox[{"InputField", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "TaggingRules", ",", " ", "\"\<PyShellOptions\>\"", ",", 
+                    "\"\<VirtualEnvironment\>\""}], "}"}], ",", 
+                    "\[IndentingNewLine]", "\"\<\>\""}], 
+                    "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", "String", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"FieldSize", "\[Rule]", "10"}]}], 
+                   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                 "}"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"\"\<Use Session\>\"", ",", "\[IndentingNewLine]", 
+                  RowBox[{"PopupMenu", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "TaggingRules", ",", " ", "\"\<PyShellOptions\>\"", ",", 
+                    "\"\<UseSession\>\""}], "}"}], ",", "\[IndentingNewLine]",
+                     "True"}], "\[IndentingNewLine]", "]"}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"{", 
+                    RowBox[{"True", ",", " ", "False"}], "}"}]}], 
+                   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                 "}"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"\"\<\>\"", ",", "\[IndentingNewLine]", 
+                  RowBox[{"Button", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "PythonShell`Private`trackme", ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"PyStatus", "[", 
+                    RowBox[{"False", ",", "\[IndentingNewLine]", 
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"TaggingRules", ",", "\"\<PyShellOptions\>\""}], 
+                    "}"}], ",", "\[IndentingNewLine]", " ", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{"\"\<UseSession\>\"", "\[Rule]", "True"}], 
+                    "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+                    "]"}]}], "\[IndentingNewLine]", "]"}], "[", 
+                    "\"\<Status\>\"", "]"}], "===", "\"\<Running\>\""}], ",", 
+                    "\[IndentingNewLine]", "\"\<Kill Session\>\"", ",", 
+                    "\[IndentingNewLine]", "\"\<Start Session\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{"ops", "=", "\[IndentingNewLine]", 
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"TaggingRules", ",", "\"\<PyShellOptions\>\""}], 
+                    "}"}], ",", "\[IndentingNewLine]", " ", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{"\"\<UseSession\>\"", "\[Rule]", "True"}], 
+                    "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+                    "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"stat", "=", 
+                    RowBox[{"PyStatus", "[", 
+                    RowBox[{"False", ",", "ops"}], "]"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"stat", "[", "\"\<Status\>\"", "]"}], "===", 
+                    "\"\<Running\>\""}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PyTools`Sessions`PySessionRemove", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"stat", "[", "\"\<Name\>\"", "]"}], 
+                    "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"PythonShell`Private`trackme", "=", 
+                    RowBox[{"RandomReal", "[", "]"}]}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PyTools`Private`Hidden`PyRunSession", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Prepend", "[", "\[IndentingNewLine]", 
+                    RowBox[{"ops", ",", "\[IndentingNewLine]", 
+                    RowBox[{"\"\<MakeSession\>\"", "\[Rule]", "True"}]}], 
+                    "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"PythonShell`Private`trackme", "=", 
+                    RowBox[{"RandomReal", "[", "]"}]}]}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+                    RowBox[{"(*", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Evaluator", "\[Rule]", "Automatic"}], ","}], 
+                    "*)"}], "\[IndentingNewLine]", 
+                    RowBox[{"Enabled", "\[Rule]", "\[IndentingNewLine]", 
+                    RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "TaggingRules", ",", "\"\<PyShellOptions\>\"", ",", 
+                    "\"\<UseSession\>\""}], "}"}], ",", "\[IndentingNewLine]",
+                     "True"}], "\[IndentingNewLine]", "]"}], "//", "TrueQ"}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                   RowBox[{"(*", 
+                    RowBox[{",", 
+                    RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}]}], "*)"}],
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                 "}"}]}], "\[IndentingNewLine]", "}"}]}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"BaseStyle", "\[Rule]", "\"\<PyShellGrid\>\""}]}], 
+            "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"BaseStyle", "\[Rule]", "\"\<PyShellGrid\>\""}]}], 
+          "\[IndentingNewLine]", "]"}]}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Background", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+         RowBox[{"With", "[", 
+          RowBox[{
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"sops", "=", "\[IndentingNewLine]", 
+             RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"{", 
+                RowBox[{"TaggingRules", ",", "\"\<PyShellOptions\>\""}], 
+                "}"}], ",", "\[IndentingNewLine]", " ", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{"\"\<UseSession\>\"", "\[Rule]", "True"}], 
+                "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+              "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+           "PythonShell`Private`trackme", ";", "\[IndentingNewLine]", 
+            RowBox[{"Needs", "[", "\"\<PyTools`\>\"", "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Lookup", "[", 
+                RowBox[{"sops", ",", "\"\<UseSession\>\""}], "]"}], "//", 
+               "TrueQ"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"If", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"PyStatus", "[", 
+                   RowBox[{"False", ",", "sops"}], "]"}], "[", 
+                  "\"\<Status\>\"", "]"}], "===", "\"\<Running\>\""}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Hue", "[", 
+                 RowBox[{".6", ",", ".5", ",", ".5"}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Hue", "[", 
+                 RowBox[{"0", ",", "1", ",", ".8"}], "]"}]}], 
+               "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"GrayLevel", "[", ".4", "]"}]}], "\[IndentingNewLine]", 
+             "]"}]}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+         "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+    "}"}]}], "]"}]], "Input",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQAWIQXfNBkHH1xteONzTusoHo2Lg+exB92XedA4je5Hvc
+B0Tfm6UbDaIvdS9JA9ElErPzQLTYutgiEP3si1obiA5gCpoE1ictPhtEm2v6
+LADRXiqcG0G0vrjdVhC95f+EvSA66NLt4yCarfn9aRDtNK37Hoj+Fj37EYiW
+aA5/DqI/nYl4BaKjt9z+AKLvPP7wCUT/ESv5AaK5H/izrQHSajZuXCD62a8s
+MH3AWlsQRK9Y0wemj/XwSoLoO7IyYNrt/WMVEB3KsUgdRE+V8YoG0Q/2XYwB
+0RsP908B0XanDi8B0RlsuetA9KHAkB0gGgBy5rXC
+  
+  "],ExpressionUUID->"b44bd823-d237-4636-9679-84846b7f6641"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Options","optnf",
+   "\"\\!\\(\\*RowBox[{\\\"DockedCells\\\"}]\\) is not a known option for \\!\
+\\(\\*RowBox[{\\\"CellObject\\\"}]\\).\"",2,1077,479,27813820130316616346,
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.7170313633308897`*^9},ExpressionUUID->"ca3b46f3-4f7a-4d66-afd4-\
+bfda42747a5a"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["PyShellGrid", "Subsection",
+ CellChangeTimes->{{3.71702908908606*^9, 
+  3.717029092508456*^9}},ExpressionUUID->"455617c2-c800-4139-b307-\
+c17f8a2179c1"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", "\"\<PyShellGrid\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.71702909358858*^9, 
+  3.717029096780424*^9}},ExpressionUUID->"c776975c-0ab8-4643-83e7-\
+afbe70cc1747"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["PyShellGrid"],
+ CellFrame->1,
+ CellMargins->10,
+ FontFamily->"Helvetica",
+ Background->GrayLevel[0.95],
+ FrameBoxOptions->{FrameStyle->GrayLevel[0.5]},
+ GridBoxOptions -> {
+  Alignment -> {
+    Left, Center}},ExpressionUUID->"383de522-4c0d-4ab9-a060-4870b54a82eb"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<PyShellGrid\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Background", "\[Rule]", 
+      RowBox[{"GrayLevel", "[", ".95", "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"GridBoxOptions", "\[Rule]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"Alignment", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Left", ",", "Center"}], "}"}]}], "\[IndentingNewLine]", 
+       "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"FrameBoxOptions", "\[Rule]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"FrameStyle", "\[Rule]", "Gray"}], "\[IndentingNewLine]", 
+       "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"FontFamily", "\[Rule]", 
+      RowBox[{"CurrentValue", "[", 
+       RowBox[{"{", 
+        RowBox[{"StyleDefinitions", ",", "\"\<Text\>\"", ",", "FontFamily"}], 
+        "}"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.717029098372752*^9, 3.717029107517889*^9}, {
+  3.7170294018041687`*^9, 3.717029426488248*^9}, {3.7170294788985243`*^9, 
+  3.717029508229622*^9}, {3.717030040883284*^9, 
+  3.7170301096250467`*^9}},ExpressionUUID->"22c43b58-3a63-4acb-bb25-\
+f9abd40b7742"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Input", "Subsection",
+ CellChangeTimes->{{3.7170269238419123`*^9, 
+  3.717026924586526*^9}},ExpressionUUID->"39a86cb0-d602-4217-b4ec-\
+42d602042cb0"],
+
+Cell[StyleData["Input"],
+ MenuCommandKey->None,ExpressionUUID->"cbeba0e4-03c0-4b4d-bf0d-14a6714bc92b"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<Input\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"MenuCommandKey", "\[Rule]", "None"}], "\[IndentingNewLine]", 
+    "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.7170269307735853`*^9, 3.717026937648316*^9}, {
+  3.717027025755381*^9, 
+  3.717027028517521*^9}},ExpressionUUID->"6ea7dab9-23ea-4a48-b2e3-\
+9ef1aa4d1c31"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Code", "Subsection",
+ CellChangeTimes->{{3.7170268432191057`*^9, 
+  3.717026843786998*^9}},ExpressionUUID->"69ddaa84-b138-4576-a2ff-\
+515726c0801f"],
+
+Cell[StyleData["Code"],
+ MenuCommandKey->None,ExpressionUUID->"34df2ffa-9c73-4889-8235-c28d15329003"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<Code\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"MenuCommandKey", "\[Rule]", "None"}], "\[IndentingNewLine]", 
+    "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.7170269307735853`*^9, 3.717026937648316*^9}, {
+  3.717027025755381*^9, 3.717027028517521*^9}, {3.7170274486585484`*^9, 
+  3.7170274491702843`*^9}},ExpressionUUID->"9e58debb-f171-45dd-9696-\
+d42ae79ddb38"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["PythonCell", "Subsection",
+ CellChangeTimes->{{3.717026791819746*^9, 
+  3.717026793323496*^9}},ExpressionUUID->"5f639b0a-e7af-4ce7-a950-\
+4497ce424c46"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", 
+  RowBox[{"\"\<PythonCell\>\"", ",", "\"\<Text\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.717026740742741*^9, 3.717026744079577*^9}, {
+  3.717026795314241*^9, 
+  3.7170268159243*^9}},ExpressionUUID->"70b281d8-a8f0-4c07-b648-e5e5c554afab"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["PythonCell", StyleDefinitions -> StyleData["Text"]],
+ Evaluatable->True,
+ CellEvaluationFunction->((Needs["PyTools`"]; PyTools`PyRun[
+    Verbatim[#], 
+    CurrentValue[
+     EvaluationNotebook[], {TaggingRules, "PyShellOptions"}, {
+     "UseSession" -> True}]])& ),
+ GeneratedCellStyles->{"Output"->"PythonTextOutput"},
+ AutoIndent->True,
+ AutoQuoteCharacters->False,
+ MenuCommandKey->"8",ExpressionUUID->"cc813216-e9ee-4505-bd4e-dcbdf759684d"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<PythonCell\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"MenuCommandKey", "\[Rule]", "\"\<8\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"AutoIndent", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Evaluatable", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"AutoQuoteCharacters", "\[Rule]", "False"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"CellEvaluationFunction", "\[Rule]", "\[IndentingNewLine]", 
+      RowBox[{"Function", "@", "\[IndentingNewLine]", 
+       RowBox[{"Function", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Needs", "[", "\"\<PyTools`\>\"", "]"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"PyTools`PyRun", "[", 
+          RowBox[{
+           RowBox[{"Verbatim", "@", "#"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"{", 
+              RowBox[{"TaggingRules", ",", "\"\<PyShellOptions\>\""}], "}"}], 
+             ",", "\[IndentingNewLine]", " ", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{"\"\<UseSession\>\"", "\[Rule]", "True"}], 
+              "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"System`GeneratedCellStyles", "\[Rule]", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Output\>\"", "\[Rule]", "\"\<PythonTextOutput\>\""}], 
+       "}"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.71702745923835*^9, 3.717027472023329*^9}, {
+  3.717027661060248*^9, 3.7170276989269333`*^9}, {3.7170277537493563`*^9, 
+  3.717027782572484*^9}, {3.717027841847884*^9, 3.7170278422531137`*^9}, {
+  3.717029551168153*^9, 3.7170295599632063`*^9}, {3.717030505215006*^9, 
+  3.717030508845422*^9}, {3.717030845226735*^9, 
+  3.717030849234993*^9}},ExpressionUUID->"5059a868-daf8-4489-9b4a-\
+3cbe1d8fea7a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["PythonInput", "Subsubsection",
+ CellChangeTimes->{{3.717026800627613*^9, 
+  3.717026805412025*^9}},ExpressionUUID->"ab9b1ba8-58a5-40ad-89e5-\
+be5dea3318b8"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", 
+  RowBox[{"\"\<PythonInput\>\"", ",", "\"\<Input\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.717026740742741*^9, 3.717026744079577*^9}, {
+  3.717026795314241*^9, 
+  3.717026820194386*^9}},ExpressionUUID->"7c6ad025-c43d-4d9e-8ee7-\
+5bbefc1e5857"],
+
+Cell[StyleData["PythonInput", StyleDefinitions -> StyleData["Input"]],
+ CellEvaluationFunction->((Needs["PyTools`"]; ToExpression[
+    SlotSequence[1], 
+    Function[Null, 
+     PyTools`PyRun[#, 
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "PyShellOptions"}, {
+       "UseSession" -> True}]], HoldAllComplete]])& ),
+ GeneratedCellStyles->{"Output"->"PythonOutput"},
+ MenuCommandKey->"9",ExpressionUUID->"a4160929-a6a3-4b2b-a1dc-887677218f39"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<PythonInput\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"MenuCommandKey", "\[Rule]", "\"\<9\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"CellEvaluationFunction", "\[Rule]", "\[IndentingNewLine]", 
+      RowBox[{"Function", "@", 
+       RowBox[{"Function", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Needs", "[", "\"\<PyTools`\>\"", "]"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"ToExpression", "[", 
+          RowBox[{"##", ",", "\[IndentingNewLine]", 
+           RowBox[{"Function", "[", "\[IndentingNewLine]", 
+            RowBox[{"Null", ",", "\[IndentingNewLine]", 
+             RowBox[{"PyTools`PyRun", "[", 
+              RowBox[{"#", ",", "\[IndentingNewLine]", 
+               RowBox[{"CurrentValue", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"{", 
+                  RowBox[{"TaggingRules", ",", "\"\<PyShellOptions\>\""}], 
+                  "}"}], ",", "\[IndentingNewLine]", " ", 
+                 RowBox[{"{", "\[IndentingNewLine]", 
+                  RowBox[{"\"\<UseSession\>\"", "\[Rule]", "True"}], 
+                  "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+                "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+             "\[IndentingNewLine]", "HoldAllComplete"}], 
+            "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+        "\[IndentingNewLine]", "]"}]}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"System`GeneratedCellStyles", "\[Rule]", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Output\>\"", "\[Rule]", "\"\<PythonOutput\>\""}], 
+       "}"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.71702745923835*^9, 3.717027647315154*^9}, {
+   3.7170277031289473`*^9, 3.717027704459044*^9}, 3.717027737301199*^9, {
+   3.717027788264202*^9, 3.717027797328802*^9}, {3.71702783002986*^9, 
+   3.717027834378284*^9}, {3.71703072750791*^9, 
+   3.717030767267457*^9}},ExpressionUUID->"be0e02a3-54bc-40cd-8e1e-\
+91ed4b57c233"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["PythonOutput", "Subsection",
+ CellChangeTimes->{{3.71703069745914*^9, 
+  3.717030699315997*^9}},ExpressionUUID->"4768e63c-199f-4bdf-9a4f-\
+35096a24d960"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", 
+  RowBox[{"\"\<PythonOutput\>\"", ",", "\"\<Output\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.71703070607076*^9, 
+  3.717030712515789*^9}},ExpressionUUID->"8953aba8-6725-4dc1-9ca3-\
+a50d1ed290d8"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["PythonOutput", StyleDefinitions -> StyleData["Output"]],
+ DefaultDuplicateCellStyle->
+  "PythonInput",ExpressionUUID->"8be31ef3-a53b-43d3-8c83-0d550d5265a0"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<PythonOutput\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"DefaultDuplicateCellStyle", "\[Rule]", "\"\<PythonInput\>\""}], 
+    "\[IndentingNewLine]", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.717030714886458*^9, 3.717030721065753*^9}, {
+  3.717030771845848*^9, 
+  3.71703080909032*^9}},ExpressionUUID->"ab4b92b0-653a-418c-ba93-\
+68a79208ba4b"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["PythonTextOutput", "Subsection",
+ CellChangeTimes->{{3.717030815536763*^9, 
+  3.7170308223537493`*^9}},ExpressionUUID->"590777a8-95dd-44b0-acc7-\
+e64017c4ac4f"],
+
+Cell[BoxData[
+ RowBox[{"SSNew", "[", 
+  RowBox[{"\"\<PythonTextOutput\>\"", ",", "\"\<Output\>\""}], "]"}]], "Input",\
+
+ CellChangeTimes->{{3.71703070607076*^9, 3.717030712515789*^9}, 
+   3.7170308241941757`*^9},ExpressionUUID->"c4e27b26-e3a1-45b8-985c-\
+c11a25b18a45"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["PythonTextOutput", StyleDefinitions -> StyleData["Output"]],
+ DefaultDuplicateCellStyle->
+  "PythonCell",ExpressionUUID->"29c8dae1-cf52-4a0d-91d6-acab9c3811cb"],
+
+Cell[BoxData[
+ RowBox[{"SSEdit", "[", 
+  RowBox[{"\"\<PythonTextOutput\>\"", ",", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"DefaultDuplicateCellStyle", "\[Rule]", "\"\<PythonCell\>\""}], 
+    "\[IndentingNewLine]", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.717030714886458*^9, 3.717030721065753*^9}, {
+  3.717030771845848*^9, 
+  3.717030838466708*^9}},ExpressionUUID->"df00ff7d-0466-41ac-a2ce-\
+463d46917e35"]
+}, Open  ]]
+}, Open  ]]
+},
+Saveable->True,
+WindowSize->{808, 755},
+WindowMargins->{{281, Automatic}, {Automatic, 22}},
+WindowTitle->"PythonShell",
+TaggingRules->{"PyShellOptions" -> {"UseSession" -> True}},
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "StylesheetFormatting.nb"]], 
+   Cell[
+    StyleData["Notebook"], Editable -> True, Saveable -> True]}, Visible -> 
+  False, FrontEndVersion -> 
+  "11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 10, 2017)", 
+  StyleDefinitions -> "Default.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[583, 21, 104, 0, 36, 49, 0, "StyleData", "StyleDefinitions", "",ExpressionUUID->"e9cd52df-cc47-4fb1-ab47-70527d186062"],
+Cell[CellGroupData[{
+Cell[712, 25, 156, 3, 45, "Subsection",ExpressionUUID->"f4c1607f-c74a-4240-a43e-76d2ebee1417"],
+Cell[871, 30, 199, 4, 30, "Input",ExpressionUUID->"6e6810e2-db1d-4dbb-a329-a0575d5dddad"],
+Cell[CellGroupData[{
+Cell[1095, 38, 2950, 68, 36, 27, 0, "StyleData", "Notebook", "All",ExpressionUUID->"5bcf475f-a8a1-4a3d-9fcb-fb356d9bb831"],
+Cell[4048, 108, 547, 13, 115, "Input",ExpressionUUID->"789d91e5-1170-47ed-b866-7dc2f1c783aa"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4632, 126, 164, 3, 44, "Subsubsection",ExpressionUUID->"c6d02979-7303-42d5-a906-af8493c4f723"],
+Cell[CellGroupData[{
+Cell[4821, 133, 12758, 237, 2908, "Input",ExpressionUUID->"b44bd823-d237-4636-9679-84846b7f6641"],
+Cell[17582, 372, 361, 9, 24, "Message",ExpressionUUID->"ca3b46f3-4f7a-4d66-afd4-bfda42747a5a"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18004, 388, 158, 3, 45, "Subsection",ExpressionUUID->"455617c2-c800-4139-b307-c17f8a2179c1"],
+Cell[18165, 393, 201, 4, 30, "Input",ExpressionUUID->"c776975c-0ab8-4643-83e7-afbe70cc1747"],
+Cell[CellGroupData[{
+Cell[18391, 401, 280, 8, 66, 30, 0, "StyleData", "PyShellGrid", "All",ExpressionUUID->"383de522-4c0d-4ab9-a060-4870b54a82eb"],
+Cell[18674, 411, 1246, 26, 220, "Input",ExpressionUUID->"22c43b58-3a63-4acb-bb25-f9abd40b7742"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19969, 443, 155, 3, 45, "Subsection",ExpressionUUID->"39a86cb0-d602-4217-b4ec-42d602042cb0"],
+Cell[20127, 448, 102, 1, 42, 24, 0, "StyleData", "Input", "All",ExpressionUUID->"cbeba0e4-03c0-4b4d-bf0d-14a6714bc92b",
+ MenuCommandKey->None],
+Cell[20232, 451, 393, 9, 73, "Input",ExpressionUUID->"6ea7dab9-23ea-4a48-b2e3-9ef1aa4d1c31"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20662, 465, 154, 3, 45, "Subsection",ExpressionUUID->"69ddaa84-b138-4576-a2ff-515726c0801f"],
+Cell[20819, 470, 101, 1, 64, 23, 0, "StyleData", "Code", "All",ExpressionUUID->"34df2ffa-9c73-4889-8235-c28d15329003",
+ MenuCommandKey->None],
+Cell[20923, 473, 442, 9, 73, "Input",ExpressionUUID->"9e58debb-f171-45dd-9696-d42ae79ddb38"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21402, 487, 158, 3, 45, "Subsection",ExpressionUUID->"5f639b0a-e7af-4ce7-a950-4497ce424c46"],
+Cell[21563, 492, 280, 5, 30, "Input",ExpressionUUID->"70b281d8-a8f0-4c07-b648-e5e5c554afab"],
+Cell[CellGroupData[{
+Cell[21868, 501, 461, 10, 50, 68, 0, "StyleData", "PythonCell", "All",ExpressionUUID->"cc813216-e9ee-4505-bd4e-dcbdf759684d",
+ MenuCommandKey->"8"],
+Cell[22332, 513, 2202, 42, 472, "Input",ExpressionUUID->"5059a868-daf8-4489-9b4a-3cbe1d8fea7a"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24571, 560, 162, 3, 44, "Subsubsection",ExpressionUUID->"ab9b1ba8-58a5-40ad-89e5-be5dea3318b8"],
+Cell[24736, 565, 286, 6, 30, "Input",ExpressionUUID->"7c6ad025-c43d-4d9e-8ee7-5bbefc1e5857"],
+Cell[25025, 573, 462, 9, 42, 70, 0, "StyleData", "PythonInput", "All",ExpressionUUID->"a4160929-a6a3-4b2b-a1dc-887677218f39",
+ MenuCommandKey->"9"],
+Cell[25490, 584, 2217, 42, 514, "Input",ExpressionUUID->"be0e02a3-54bc-40cd-8e1e-91ed4b57c233"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27756, 632, 159, 3, 45, "Subsection",ExpressionUUID->"4768e63c-199f-4bdf-9a4f-35096a24d960"],
+Cell[27918, 637, 238, 5, 30, "Input",ExpressionUUID->"8953aba8-6725-4dc1-9ca3-a50d1ed290d8"],
+Cell[CellGroupData[{
+Cell[28181, 646, 173, 2, 46, 72, 0, "StyleData", "PythonOutput", "All",ExpressionUUID->"8be31ef3-a53b-43d3-8c83-0d550d5265a0"],
+Cell[28357, 650, 423, 9, 73, "Input",ExpressionUUID->"ab4b92b0-653a-418c-ba93-68a79208ba4b"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28829, 665, 166, 3, 45, "Subsection",ExpressionUUID->"590777a8-95dd-44b0-acc7-e64017c4ac4f"],
+Cell[28998, 670, 269, 6, 30, "Input",ExpressionUUID->"c4e27b26-e3a1-45b8-985c-c11a25b18a45"],
+Cell[CellGroupData[{
+Cell[29292, 680, 176, 2, 46, 76, 0, "StyleData", "PythonTextOutput", "All",ExpressionUUID->"29c8dae1-cf52-4a0d-91d6-acab9c3811cb"],
+Cell[29471, 684, 427, 9, 73, "Input",ExpressionUUID->"df00ff7d-0466-41ac-a2ce-463d46917e35"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

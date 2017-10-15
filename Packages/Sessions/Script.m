@@ -9,6 +9,9 @@ PyMExport::usage="Represents a mathematica_export inside a python run";
 PyMExportParse::usage="Parses the JSON returned by a script"
 
 
+PackageScopeBlock[$PyExportKey]
+
+
 Begin["`Private`"];
 
 
@@ -26,53 +29,62 @@ If[!ValueQ[$PyExportKey],
 
 $PyRunHeader:=
 	PyColumn[{
-		PyIf[PyNot@PyMemberQ[$PySysPath,$PyMLibDirectory]][
-			PySysPathInsert[$PyMLibDirectory],
+		PyIf[PyNot@PyMemberQ[$PySysPath,PyString@$PyMLibDirectory]][
+			PySysPathInsert[PyString@$PyMLibDirectory],
 			PyImport["MLib"],
 			PyAssign[
 				PyIndex[
 					PyDot["MLib","mathematica_export_parameters"],
 					PyString@"Delimiter"
 					],
-				$PyExportKey
+				PyString@$PyExportKey
 				]
 			]
 		}]
 
 
 PyMJSONImport[base_]:=
-	With[{string=
-		Lookup[base, "ReturnType", "String"]==="String"
-		},
-		With[{coreFMT=
+	With[{
+		strQ=MatchQ[Lookup[base, "ReturnType"], Except["File"|"TemporaryFile"]],
+		coreFMT=
 			Replace["JSON"->"RawJSON"]@
-			Lookup[base, "ReturnFormat", 
-				If[string, 
-					"RawJSON",
-					If[FileExtension[Lookup[base,"ReturnValue"]]==="",
-						"RawJSON",
-						Sequence@@{}
-						]
+			Lookup[base, 
+				"ReturnFormat", 
+				Switch[Lookup[base, "ReturnType"],
+					"Bytes",
+						"String",
+					"File"|"TemporaryFile", 
+						If[FileExtension[Lookup[base,"ReturnValue"]]==="",
+							"RawJSON",
+							None
+							],
+					_,
+						"RawJSON"
 					]
+				],
+		coreData=
+			Switch[Lookup[base, "ReturnType", "String"],
+				"Bytes",
+					Developer`DecodeBase64[
+						StringTrim[Lookup[base, "ReturnValue"],"b'"|"'"]
+						]
+					(*If[$VersionNumber\[GreaterEqual]11.2,
+						ByteArrayToString@
+							ByteArray@Lookup[base, "ReturnValue"],
+						With[{tmp = CreateFile[]},
+							BinaryWrite[tmp, Lookup[base, "ReturnValue"]];
+							Function[DeleteFile[tmp];#]@Import[tmp, "String"]
+							]
+						]*),
+				_,
+					Lookup[base, "ReturnValue"]
 				]
-			},
-		If[coreFMT==="RawJSON",
-			Quiet[
-				Check[
-					If[string,ImportString,Import][Lookup[base, "ReturnValue"],coreFMT],
-					If[string,ImportString,Import][Lookup[base, "ReturnValue"],"JSON"],
-					{
-						Import::jsonhintposition,
-						Import::jsonhintposandchar,
-						Import::jsonnullinput,
-						Import::jsonkvsep,
-						Import::jsonexpendofinput,
-						Import::jsontokenmismatch,
-						ImportString::string,
-						ImportString::bkslsh,
-						Import::jsoninvalidtoken
-						}
-					],
+		},
+	If[coreFMT==="RawJSON",
+		Quiet[
+			Check[
+				If[strQ,ImportString,Import][coreData,coreFMT],
+				If[strQ,ImportString,Import][coreData,"JSON"],
 				{
 					Import::jsonhintposition,
 					Import::jsonhintposandchar,
@@ -85,7 +97,21 @@ PyMJSONImport[base_]:=
 					Import::jsoninvalidtoken
 					}
 				],
-			If[string,ImportString,Import][base,coreFMT]
+			{
+				Import::jsonhintposition,
+				Import::jsonhintposandchar,
+				Import::jsonnullinput,
+				Import::jsonkvsep,
+				Import::jsonexpendofinput,
+				Import::jsontokenmismatch,
+				ImportString::string,
+				ImportString::bkslsh,
+				Import::jsoninvalidtoken
+				}
+			],
+		If[strQ,ImportString,Import][
+			Global`a = coreData,
+			If[coreFMT===None, Sequence@@{}, coreFMT]
 			]
 		]
 	]
@@ -99,11 +125,12 @@ PyMExportParse[s_String]:=
 			Replace[ImportString[e, "RawJSON"],{
 				base_?OptionQ:>
 					Replace[Lookup[base, "ReturnType", "String"],{
-						"String":>
+						"String"|"Bytes":>
 							Quiet[
 								Check[
 									PyMJSONImport[base],
-									Lookup[base, "ReturnValue"]
+									Lookup[base, "ReturnValue"],
+									Import::fmterr
 									],
 								Import::fmterr
 								],

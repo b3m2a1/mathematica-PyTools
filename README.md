@@ -182,6 +182,34 @@ Big data automatically routes through a temporary file. For example:
 
 ---
 
+<a id="python-shell" style="width:0;height:0;margin:0;padding:0;">&zwnj;</a>
+
+## Python Shell
+
+### Stylesheets
+
+* [PythonShell](FrontEnd/StyleSheets/PyTools/PythonShell.nb)
+
+### Description
+
+The  [PythonShell](FrontEnd/StyleSheets/PyTools/PythonShell.nb)  stylesheet provides a shell-like interface to the python interface. A new one can be made like so:
+
+	PyNewShell[]
+
+	(*Out:*)
+	
+	NotebookObject[FrontEndObject[LinkObject["nh9n2_shm", 3, 1]], 1239]
+
+![title-4982050618186759685](project/img/title-4982050618186759685.png)
+
+This interface uses  ```PyRun```  naturally, allowing us to easily do things like this:
+
+![title-7010987427565799901](project/img/title-7010987427565799901.png)
+
+(Note that  ```Return```  in this context simply tells  ```PyRun```  to apply export scripts rather than passing the string representation through)
+
+---
+
 <a id="python-utilities" style="width:0;height:0;margin:0;padding:0;">&zwnj;</a>
 
 ## Python Utilities
