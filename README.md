@@ -32,7 +32,9 @@ The core function for using the framework is  ```PyRun```  which hooks up the se
 
 Here’s a very basic example of running some code:
 
-	PyRun[Print["I am a llama"]]
+```mathematica
+PyRun[Print["I am a llama"]]
+```
 
 	(*Out:*)
 	
@@ -40,13 +42,15 @@ Here’s a very basic example of running some code:
 
 We’ll go one step further and import something on the python side to be used in a session and using a specific python version:
 
-	PyRun[
-	  Import["numpy"];
-	  myarr = numpy.array[{1, 2, 3}];
-	  myarr,
-	  "Version" -> "3.4", 
-	  "UseSession" -> True
-	  ]
+```mathematica
+PyRun[
+ Import["numpy"];
+ myarr=numpy.array[{1,2,3}];
+ myarr,
+ "Version"->"3.4", 
+ "UseSession"->True
+ ]
+```
 
 	(*Out:*)
 	
@@ -54,11 +58,13 @@ We’ll go one step further and import something on the python side to be used i
 
 We’ll note that we can now use this  ```myarr```  object elsewhere in that session. Here we’ll take 10 of its properties at random
 
-	PyRun[
-	   Return[dir@myarr],
-	   "Version" -> "3.4", 
-	   "UseSession" -> True
-	   ] // RandomSample[#, 10] &
+```mathematica
+PyRun[
+ Return[dir@myarr],
+ "Version"->"3.4", 
+ "UseSession"->True
+ ]//RandomSample[#,10]&
+```
 
 	(*Out:*)
 	
@@ -67,22 +73,26 @@ We’ll note that we can now use this  ```myarr```  object elsewhere in that ses
 
 The  ```Return```  keyword at the end of the code block tells the package to try to import that result as a Mathematica expression. Note that using sessions is much faster than running a bunch of stand-alone code, once the session has been initialized:
 
-	(*With session*)
-	PyRun[
-	    Import["numpy"],
-	    "Version" -> "3.4", 
-	    "UseSession" -> True
-	    ] // AbsoluteTiming // First
+```mathematica
+(*With session*)
+PyRun[
+ Import["numpy"],
+ "Version"->"3.4", 
+ "UseSession"->True
+ ]//AbsoluteTiming//First
+```
 
 	(*Out:*)
 	
 	0.016188
 
-	(*Without session*)
-	PyRun[
-	    Import["numpy"],
-	    "Version" -> "3.4"
-	    ] // AbsoluteTiming // First
+```mathematica
+(*Without session*)
+PyRun[
+ Import["numpy"],
+ "Version"->"3.4"
+ ]//AbsoluteTiming//First
+```
 
 	(*Out:*)
 	
@@ -90,8 +100,10 @@ The  ```Return```  keyword at the end of the code block tells the package to try
 
 We can view properties of this session using the framework in the  [Sessions](Packages/Sessions/Sessions.m)  package:
 
-	Needs["PyTools`Sessions`"];
-	PySessions[]
+```mathematica
+Needs["PyTools`Sessions`"];
+PySessions[]
+```
 
 	(*Out:*)
 	
@@ -101,13 +113,15 @@ The framework provides much more control over sessions, but we won’t delve int
 
 The code  ```PyRun```  is actually sending to the session is generally generated via the   [SymbolicPython](Packages/Symbolic/SymbolicPython.m)  package. (you can see the code it’s building via the  ```"EchoCode"```  parameter). Let’s take a look at what that does:
 
-	Needs["PyTools`Symbolic`"];
-	ToSymbolicPython[
-	  Module[{x},
-	    Import["numpy"];
-	    Print[x]
-	    ]
-	  ]
+```mathematica
+Needs["PyTools`Symbolic`"];
+ToSymbolicPython[
+ Module[{x},
+  Import["numpy"];
+  Print[x]
+  ]
+ ]
+```
 
 	(*Out:*)
 	
@@ -115,12 +129,14 @@ The code  ```PyRun```  is actually sending to the session is generally generated
 
 We can see it builds up a symbolic representation of the code we sent it. Many things are supported (but obviously even more are not). This symbolic representation can then be marshalled down to a string via  ```ToPython``` .
 
-	ToSymbolicPython[
-	   Module[{x},
-	     Import["numpy"];
-	     Print[x]
-	     ]
-	   ] // ToPython
+```mathematica
+ToSymbolicPython[
+ Module[{x},
+  Import["numpy"];
+  Print[x]
+  ]
+ ]//ToPython
+```
 
 	(*Out:*)
 	
@@ -128,9 +144,11 @@ We can see it builds up a symbolic representation of the code we sent it. Many t
 
 To effectively use this requires good knowledge of python and Mathematica, as the syntax is generally a mixture of python structures, Mathematica structures, and some judgement calls. For instance,  ```Module```  is being treated as an anonymous  ```lambda```  function which scopes its parameter. Other things have more direct translations:
 
-	ToSymbolicPython[
-	   Map[Print, Range[10]]
-	   ] // ToPython
+```mathematica
+ToSymbolicPython[
+ Map[Print, Range[10]]
+ ]//ToPython
+```
 
 	(*Out:*)
 	
@@ -138,9 +156,11 @@ To effectively use this requires good knowledge of python and Mathematica, as th
 
 Other things that perhaps look like more Mathematica code are translated to their python equivalents:
 
-	ToSymbolicPython[
-	   Insert[$Path, my$dir, 0]
-	   ] // ToPython
+```mathematica
+ToSymbolicPython[
+ Insert[$Path, my$dir, 0]
+ ]//ToPython
+```
 
 	(*Out:*)
 	
@@ -152,13 +172,15 @@ The script interface makes it easier to write python-side scripts for in python 
 
 A quick example of how this works:
 
-	PyRun[
-	  Import["numpy"];
-	  arr = numpy.array[Range[10]];
-	  Return[list[arr + arr]],
-	  "Version" -> "3.4",
-	  "UseSession" -> True
-	  ]
+```mathematica
+PyRun[
+ Import["numpy"];
+ arr = numpy.array[Range[10]];
+ Return[list[arr + arr]],
+ "Version"->"3.4",
+ "UseSession"->True
+ ]
+```
 
 	(*Out:*)
 	
@@ -168,13 +190,15 @@ A python  ```list```  can (generally) be serialized to JSON, so it can be import
 
 Big data automatically routes through a temporary file. For example:
 
-	PyRun[
-	   Import["numpy"];
-	   arr = numpy.random.rand[100, 100];
-	   Return@Map[list, arr],
-	   "Version" -> "3.4",
-	   "UseSession" -> True
-	   ] // Short
+```mathematica
+PyRun[
+ Import["numpy"];
+ arr = numpy.random.rand[100, 100];
+ Return@Map[list,arr],
+ "Version"->"3.4",
+ "UseSession"->True
+ ]//Short
+```
 
 	(*Out:*)
 	
@@ -194,7 +218,9 @@ Big data automatically routes through a temporary file. For example:
 
 The  [PythonShell](FrontEnd/StyleSheets/PyTools/PythonShell.nb)  stylesheet provides a shell-like interface to the python interface. A new one can be made like so:
 
-	PyNewShell[]
+```mathematica
+PyNewShell[]
+```
 
 	(*Out:*)
 	
@@ -226,7 +252,9 @@ The core use of this package will be to expand the basic framework by adding a c
 
 The current sole utility is an HTTP server:
 
-	Needs["PyTools`Utilities`"];
-	PyServerOpen[Directory[]]
+```mathematica
+Needs["PyTools`Utilities`"];
+PyServerOpen[Directory[]]
+```
 
  ![title-5604723046377168390](project/img/title-5604723046377168390.png)
