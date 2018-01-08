@@ -20,7 +20,7 @@ The easiest way to install this package is using a paclet server installation:
  ]
 ```
 
-If you’ve already installed it you can update using:
+If you've already installed it you can update using:
 
 ```mathematica
  PacletUpdate[
@@ -52,13 +52,13 @@ The application supports a few core pieces of functionality:
 
 ### Description
 
-This is the heart of the framework. A  [```ProcessObject```](https://reference.wolfram.com/language/ref/ProcessObject.html)  corresponding to a python interpreter or the  [```$SystemShell```](https://reference.wolfram.com/language/ref/%24SystemShell.html)  can be generated and code can be passed to it to run with a convenient polling mechanism to make sure it hasn’t crashed.
+This is the heart of the framework. A  [```ProcessObject```](https://reference.wolfram.com/language/ref/ProcessObject.html)  corresponding to a python interpreter or the  [```$SystemShell```](https://reference.wolfram.com/language/ref/%24SystemShell.html)  can be generated and code can be passed to it to run with a convenient polling mechanism to make sure it hasn't crashed.
 
 The core function for using the framework is  ```PyRun```  which hooks up the sessions, code generation, and scripts interfaces. The  [Sessions](Packages/Sessions/Sessions.m)  package provides access to the underlying session config, the  [SymbolicPython](Packages/Symbolic/SymbolicPython.m)  package provides an interface for generating symbolic representations of python code, and the  [Script](Packages/Sessions/Script.m)  package provides an interface for using python-side scripts to facilitate communication between the sides.
 
 ### Examples
 
-Here’s a very basic example of running some code:
+Here's a very basic example of running some code:
 
 ```mathematica
  PyRun[Print["I am a llama"]]
@@ -68,15 +68,15 @@ Here’s a very basic example of running some code:
 	
 	"I am a llama"
 
-We’ll go one step further and import something on the python side to be used in a session and using a specific python version:
+We'll go one step further and import something on the python side to be used in a session and using a specific python version:
 
 ```mathematica
  PyRun[
  Import["numpy"];
  myarr=numpy.array[{1,2,3}];
  myarr,
- "Version""3.4", 
- "UseSession"True
+ "Version"->"3.4", 
+ "UseSession"->True
  ]
 ```
 
@@ -84,13 +84,13 @@ We’ll go one step further and import something on the python side to be used i
 	
 	"array([1, 2, 3])"
 
-We’ll note that we can now use this  ```myarr```  object elsewhere in that session. Here we’ll take 10 of its properties at random
+We'll note that we can now use this  ```myarr```  object elsewhere in that session. Here we'll take 10 of its properties at random
 
 ```mathematica
  PyRun[
  Return[dir@myarr],
- "Version""3.4", 
- "UseSession"True
+ "Version"->"3.4", 
+ "UseSession"->True
  ]//RandomSample[#,10]&
 ```
 
@@ -104,8 +104,8 @@ The  ```Return```  keyword at the end of the code block tells the package to try
 (*With session*) 
  PyRun[
  Import["numpy"],
- "Version""3.4", 
- "UseSession"True
+ "Version"->"3.4", 
+ "UseSession"->True
  ]//AbsoluteTiming//First
 ```
 
@@ -117,7 +117,7 @@ The  ```Return```  keyword at the end of the code block tells the package to try
 (*Without session*) 
  PyRun[
  Import["numpy"],
- "Version""3.4"
+ "Version"->"3.4"
  ]//AbsoluteTiming//First
 ```
 
@@ -136,9 +136,9 @@ We can view properties of this session using the framework in the  [Sessions](Pa
 	
 ![title-4067019816646860284](project/img/title-4067019816646860284.png)
 
-The framework provides much more control over sessions, but we won’t delve into that here.
+The framework provides much more control over sessions, but we won't delve into that here.
 
-The code  ```PyRun```  is actually sending to the session is generally generated via the   [SymbolicPython](Packages/Symbolic/SymbolicPython.m)  package. (you can see the code it’s building via the  ```"EchoCode"```  parameter). Let’s take a look at what that does:
+The code  ```PyRun```  is actually sending to the session is generally generated via the   [SymbolicPython](Packages/Symbolic/SymbolicPython.m)  package. (you can see the code it's building via the  ```"EchoCode"```  parameter). Let's take a look at what that does:
 
 ```mathematica
  Needs["PyTools`Symbolic`"]; 
@@ -204,8 +204,8 @@ A quick example of how this works:
  Import["numpy"];
  arr = numpy.array[Range[10]];
  Return[list[arr + arr]],
- "Version""3.4",
- "UseSession"True
+ "Version"->"3.4",
+ "UseSession"->True
  ]
 ```
 
@@ -222,8 +222,8 @@ Big data automatically routes through a temporary file. For example:
  Import["numpy"];
  arr = numpy.random.rand[100, 100];
  Return@Map[list,arr],
- "Version""3.4",
- "UseSession"True
+ "Version"->"3.4",
+ "UseSession"->True
  ]//Short
 ```
 
