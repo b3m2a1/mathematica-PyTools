@@ -31,6 +31,8 @@ PyAlias::usage=
 
 $PyLangTranslations::usage=
 	"Maps Mathematica structures into SymbolicPython structures";
+$PyLangPreEvaluate::usage=
+	"Specifies evaluations to be done before the standard SymbolicPython conversion";
 
 
 (*PythonRun::usage=
@@ -1583,6 +1585,16 @@ PyAlias@(struct_?SymbolicPythonQ)[a___][b___][c___][d___]:=
 $PySymbolsContext=$Context;
 
 
+If[!ValueQ@$PyLangPreEvaluate,
+	$PyLangPreEvaluate=
+		{
+			
+			}
+]
+
+
+If[!ValueQ@$PyLangTranslations,
+
 $PyLangTranslations=
 	{
 	
@@ -1742,7 +1754,8 @@ $PyLangTranslations=
 		HoldPattern[Append[x_,v_]]:>
 			PyDot[x,"append"][v]
 			
-		};
+		}
+	];
 
 
 $PyLangTranslationSymbols=
@@ -1768,7 +1781,7 @@ ToSymbolicPython[symbols:{___Symbol}:{},expr_]:=
 		},
 		ReleaseHold[
 			ReplaceRepeated[
-				Hold[expr]/.
+				ReplaceRepeated[Hold[expr], $PyLangPreEvaluate]/.
 					Join[syms,
 						{
 							p_PyString:>p (* Protects the inner string from further replacement *),
