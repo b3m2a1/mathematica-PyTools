@@ -29,6 +29,10 @@ PyAlias::usage=
 	"Generates an alias for a lower-level form to be called with ToPython";
 
 
+$PyLangTranslations::usage=
+	"Maps Mathematica structures into SymbolicPython structures";
+
+
 (*PythonRun::usage=
 	"Runs a chunk of python code or a file";
 PythonStart::usage=
@@ -1579,165 +1583,166 @@ PyAlias@(struct_?SymbolicPythonQ)[a___][b___][c___][d___]:=
 $PySymbolsContext=$Context;
 
 
-$PyLangTranslations=Dispatch@{
-
-	Equal->PyEqual,
-	Rule->Rule (* Just protecting it from later replacement *),
-	Association->Association (* Just protecting it from later replacement *),
-	RuleDelayed->RuleDelayed (* Just protecting it from later replacement *),
-	SameQ->PyIs,
-	Less->PyLess,
-	LessEqual->PyLessEqual,
-	Greater->PyGreater,
-	GreaterEqual->PyGreaterEqual,
-	And->PyAnd,
-	Or->PyOr,
-	Not->PyNot,
-	AllTrue->PyAll,
-	AnyTrue->PyAny,
-	Min->PyMin,
-	Max->PyMax,
-	Plus->PyPlus,
-	Subtract->PyMinus,
-	Times->PyMultiply,
-	Divide->PyDivide,
-	Sqrt->PySqrt,
-	Power[z_,1/2]:>PySqrt[z],
-	Power->PyPower,
-	AddTo->PyAddTo,
-	SubtractFrom->PySubtractFrom,
-	TimesBy->PyMultiplyBy,
-	DivideBy->PyDivideBy,
-	Remove->PyDel,
-	CompoundExpression->PyColumn@*List,
-	Dot->PyDot,
-	Part->PyIndex,
-	Span->PySlice,
-	Print->PyPrint,
-	ToString->PyStr,
-	Return->PyReturn,
-	Break->PyBreak,
-	Assert->PyAssert,
-	Which->PyWhich,
-	Subdivide->PySubdivide,
-	Sin->PySin,
-	Cos->PyCos,
-	Tan->PyTan,
-	ArcSin->PyArcSin,
-	ArcCos->PyArcCos,
-	ArcTan->PyArcTan,
-	FromSphericalCoordinates->PyFromSphericalCoordinates,
-	ToSphericalCoordinates->PyToSphericalCoordinates,
-	StringToStream->PyStringToStream,
-	HoldPattern[$Path]->$PySysPath,
-	MemberQ->PyMemberQ,
-	Throw->PyRaise,
-	Do->PyDo,
-	Scan->PyScan,
-	Function->PyFunction,
-	HoldPattern@
-		MapIndexed[(h:Function|PyFunction)[a___,CompoundExpression[f__,Null]],l_]:>
-		PyScanIndexed[h[a,CompoundExpression[f]],l],
-	MapIndexed->PyMapIndexed,
-	StringRiffle->PyStringRiffle,
-	StringJoin->PyPlus,
+$PyLangTranslations=
+	{
 	
-	HoldPattern[PyString[PyString[s__]]]:>
-		PyString[s],
-	HoldPattern[PyString[PyString[s_,___],sep_]]:>
-		PyString[s,sep],
+		Equal->PyEqual,
+		Rule->Rule (* Just protecting it from later replacement *),
+		Association->Association (* Just protecting it from later replacement *),
+		RuleDelayed->RuleDelayed (* Just protecting it from later replacement *),
+		SameQ->PyIs,
+		Less->PyLess,
+		LessEqual->PyLessEqual,
+		Greater->PyGreater,
+		GreaterEqual->PyGreaterEqual,
+		And->PyAnd,
+		Or->PyOr,
+		Not->PyNot,
+		AllTrue->PyAll,
+		AnyTrue->PyAny,
+		Min->PyMin,
+		Max->PyMax,
+		Plus->PyPlus,
+		Subtract->PyMinus,
+		Times->PyMultiply,
+		Divide->PyDivide,
+		Sqrt->PySqrt,
+		Power[z_,1/2]:>PySqrt[z],
+		Power->PyPower,
+		AddTo->PyAddTo,
+		SubtractFrom->PySubtractFrom,
+		TimesBy->PyMultiplyBy,
+		DivideBy->PyDivideBy,
+		Remove->PyDel,
+		CompoundExpression->PyColumn@*List,
+		Dot->PyDot,
+		Part->PyIndex,
+		Span->PySlice,
+		Print->PyPrint,
+		ToString->PyStr,
+		Return->PyReturn,
+		Break->PyBreak,
+		Assert->PyAssert,
+		Which->PyWhich,
+		Subdivide->PySubdivide,
+		Sin->PySin,
+		Cos->PyCos,
+		Tan->PyTan,
+		ArcSin->PyArcSin,
+		ArcCos->PyArcCos,
+		ArcTan->PyArcTan,
+		FromSphericalCoordinates->PyFromSphericalCoordinates,
+		ToSphericalCoordinates->PyToSphericalCoordinates,
+		StringToStream->PyStringToStream,
+		HoldPattern[$Path]->$PySysPath,
+		MemberQ->PyMemberQ,
+		Throw->PyRaise,
+		Do->PyDo,
+		Scan->PyScan,
+		Function->PyFunction,
+		HoldPattern@
+			MapIndexed[(h:Function|PyFunction)[a___,CompoundExpression[f__,Null]],l_]:>
+			PyScanIndexed[h[a,CompoundExpression[f]],l],
+		MapIndexed->PyMapIndexed,
+		StringRiffle->PyStringRiffle,
+		StringJoin->PyPlus,
 		
-	HoldPattern[Verbatim[Blank][h:_String|_Symbol]]:>
-		RuleCondition["_"<>Replace[Unevaluated@h,_Symbol:>SymbolName[h]],True],
-	HoldPattern[Verbatim[Blank][h_]]:>
-		PyRow@{"_",h},
-	HoldPattern[
-		(Times|PyMultiply)[
-			Verbatim[BlankSequence][h_],
-			Verbatim[BlankSequence][]
-			]
-		]:>
-		PyMagic[h],
-	HoldPattern[
-		(Times|PyMultiply)[
-			Verbatim[BlankSequence][h_],
-			Verbatim[BlankSequence][][e___]
-			]
-		]:>
-		PyMagic[h][e],
-	HoldPattern[Verbatim[BlankSequence][h_]]:>
-		PyPrivate[h],
-	HoldPattern[Set[var_,val_]]:>
-		PyAssign[var,val],
-	HoldPattern[SetDelayed[
-		(p_PyDecorator)[pat_],
-		val_
-		]]:>
-		p[SetDelayed[pat,val]],
-	HoldPattern[SetDelayed[
-		(var:_String|_Symbol?(
-			Function[Null,
-			Not@MatchQ[Context[#],$PySymbolsContext|"System`"],
-			HoldFirst])|
-			_PyMagic|_PySymbol)[pats__],val_]]:> 
-		PyDef[var,
-			Replace[{pats},{
-				Verbatim[Pattern][p_,_]:>
-					p,
-				Verbatim[Optional[p_,v_]]:>
-					Replace[p,Verbatim[Pattern][p2_,_]:>p2]->v
-				}]][val],
-	HoldPattern@Module[{vars___},CompoundExpression[e___,r_]]:>
-		PyLambda[vars][{e,r}],
-	HoldPattern@Module[{vars___},e_]:>
-		PyLambda[vars][e],
-	HoldPattern[s_Symbol?(Function[Null,Context[#]===$Context,HoldFirst])]:>
-		RuleCondition[SymbolName@Unevaluated[s],True],
-	HoldPattern[s_String[args___]]:>
-		PyCall[s][args],
+		HoldPattern[PyString[PyString[s__]]]:>
+			PyString[s],
+		HoldPattern[PyString[PyString[s_,___],sep_]]:>
+			PyString[s,sep],
+			
+		HoldPattern[Verbatim[Blank][h:_String|_Symbol]]:>
+			RuleCondition["_"<>Replace[Unevaluated@h,_Symbol:>SymbolName[h]],True],
+		HoldPattern[Verbatim[Blank][h_]]:>
+			PyRow@{"_",h},
+		HoldPattern[
+			(Times|PyMultiply)[
+				Verbatim[BlankSequence][h_],
+				Verbatim[BlankSequence][]
+				]
+			]:>
+			PyMagic[h],
+		HoldPattern[
+			(Times|PyMultiply)[
+				Verbatim[BlankSequence][h_],
+				Verbatim[BlankSequence][][e___]
+				]
+			]:>
+			PyMagic[h][e],
+		HoldPattern[Verbatim[BlankSequence][h_]]:>
+			PyPrivate[h],
+		HoldPattern[Set[var_,val_]]:>
+			PyAssign[var,val],
+		HoldPattern[SetDelayed[
+			(p_PyDecorator)[pat_],
+			val_
+			]]:>
+			p[SetDelayed[pat,val]],
+		HoldPattern[SetDelayed[
+			(var:_String|_Symbol?(
+				Function[Null,
+				Not@MatchQ[Context[#],$PySymbolsContext|"System`"],
+				HoldFirst])|
+				_PyMagic|_PySymbol)[pats__],val_]]:> 
+			PyDef[var,
+				Replace[{pats},{
+					Verbatim[Pattern][p_,_]:>
+						p,
+					Verbatim[Optional[p_,v_]]:>
+						Replace[p,Verbatim[Pattern][p2_,_]:>p2]->v
+					}]][val],
+		HoldPattern@Module[{vars___},CompoundExpression[e___,r_]]:>
+			PyLambda[vars][{e,r}],
+		HoldPattern@Module[{vars___},e_]:>
+			PyLambda[vars][e],
+		HoldPattern[s_Symbol?(Function[Null,Context[#]===$Context,HoldFirst])]:>
+			RuleCondition[SymbolName@Unevaluated[s],True],
+		HoldPattern[s_String[args___]]:>
+			PyCall[s][args],
+			
+		HoldPattern@Increment[var_]:>
+			PyAddTo[var,1],
+		HoldPattern@Decrement[var_]:>
+			PySubtractFrom[var,1],
 		
-	HoldPattern@Increment[var_]:>
-		PyAddTo[var,1],
-	HoldPattern@Decrement[var_]:>
-		PySubtractFrom[var,1],
-	
-	HoldPattern@If[test_,if_]:>
-		PyIf[test][if],
-	HoldPattern@If[test_,if_,else_]:>
-		PyIfElse[test][if,else],
+		HoldPattern@If[test_,if_]:>
+			PyIf[test][if],
+		HoldPattern@If[test_,if_,else_]:>
+			PyIfElse[test][if,else],
+			
+		HoldPattern[Import[f_->v_->a_]]:>
+			PyFromImportAs[f,v,a],
+		HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]->v_]]:>
+			PyImportAs[f,v],
+		HoldPattern[Import[(Dot|PyDot)[f_,v_]]]:>
+			PyFromImport[f,v],
+		HoldPattern[Import[(Dot|PyDot)[f_,v_]->a_]]:>
+			PyFromImportAs[f,v,a],
+		HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]]]:>
+			PyImport[f],
+			
+		HoldPattern[For[init_,test_,inc_,do_]]:>
+			(init;While[test,do;inc]),
+		HoldPattern[While[test_,do_]]:>
+			PyWhile[test][do],
+		HoldPattern@Map[f_,i_]:>
+			PyList@PyMap[f,i],
+		HoldPattern@MapThread[f_,{i__}]:>
+			PyList@PyMap[f,i],
+			
+		HoldPattern[Table[expr_,spec_]]:>
+			PyListComprehension[expr,spec],
 		
-	HoldPattern[Import[f_->v_->a_]]:>
-		PyFromImportAs[f,v,a],
-	HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]->v_]]:>
-		PyImportAs[f,v],
-	HoldPattern[Import[(Dot|PyDot)[f_,v_]]]:>
-		PyFromImport[f,v],
-	HoldPattern[Import[(Dot|PyDot)[f_,v_]->a_]]:>
-		PyFromImportAs[f,v,a],
-	HoldPattern[Import[f:Except[_Rule|_Dot|_PyDot]]]:>
-		PyImport[f],
-		
-	HoldPattern[For[init_,test_,inc_,do_]]:>
-		(init;While[test,do;inc]),
-	HoldPattern[While[test_,do_]]:>
-		PyWhile[test][do],
-	HoldPattern@Map[f_,i_]:>
-		PyList@PyMap[f,i],
-	HoldPattern@MapThread[f_,{i__}]:>
-		PyList@PyMap[f,i],
-		
-	HoldPattern[Table[expr_,spec_]]:>
-		PyListComprehension[expr,spec],
-	
-	HoldPattern[Range[spec___]]:>
-		PyRange[spec],
-		
-	HoldPattern[Insert[x_,v_,p_]]:>
-		PyDot[x,"insert"][p,v],
-	HoldPattern[Append[x_,v_]]:>
-		PyDot[x,"append"][v]
-		
-	};
+		HoldPattern[Range[spec___]]:>
+			PyRange[spec],
+			
+		HoldPattern[Insert[x_,v_,p_]]:>
+			PyDot[x,"insert"][p,v],
+		HoldPattern[Append[x_,v_]]:>
+			PyDot[x,"append"][v]
+			
+		};
 
 
 $PyLangTranslationSymbols=
@@ -1791,7 +1796,7 @@ ToSymbolicPython[symbols:{___Symbol}:{},expr_]:=
 							HoldAllComplete
 							]):>
 						PySymbol[s],
-				$PyLangTranslations
+				Dispatch@$PyLangTranslations
 				]
 			]
 		];
