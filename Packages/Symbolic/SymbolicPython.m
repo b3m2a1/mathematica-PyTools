@@ -457,8 +457,18 @@ ToPython[SlotSequence[n_]]:=
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*Row*)
+
+
+
 ToPython@PyRow[args_List,riffle:_String:""]:=
 	StringJoin@Riffle[ToPython/@args,riffle]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Block*)
+
 
 
 $PyIndentLevel=0;
@@ -484,8 +494,18 @@ ToPython@PyBlock[e__][a:Except[_List],b___]:=
 	ToPython@PyBlock[e][{a,b}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Column*)
+
+
+
 PyAlias@PyColumn[c__]:=
 	PyBlock[Nothing,0][c];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Wrap*)
+
 
 
 PyAlias@
@@ -501,52 +521,119 @@ PyAlias@
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*Command*)
+
+
+
 PyAlias@PyCommand[c_][args__]:=
 	PyRow[{c,PyRow[{args},", "]}," "];
 
 
+(* ::Subsubsection::Closed:: *)
+(*As*)
+
+
+
 PyAlias@PyAs[arg_]:=
 	PyCommand["as"][arg];
+PyAlias@PyAs[a_, b_]:=
+	PyRow[{a, PyAs[b]}, " "]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Assert*)
+
 
 
 PyAlias@PyAssert[test_]:=
 	PyCommand["assert"][test];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Break*)
+
+
+
 PyAlias@PyBreak[]:=
 	PyCommand["break"][];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Continue*)
+
 
 
 PyAlias@PyContinue[]:=
 	PyCommand["continue"][""];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Del*)
+
+
+
 PyAlias@PyDel[arg_]:=
 	PyCommand["del"][arg];
+
+
+(* ::Subsubsection::Closed:: *)
+(*From*)
+
 
 
 PyAlias@PyFrom[arg_]:=
 	PyCommand["from"][arg];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Global*)
+
+
+
 PyAlias@PyGlobal[args__]:=
 	PyCommand["global"][args];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Import*)
+
 
 
 PyAlias@PyImport[args__]:=
 	PyCommand["import"][Replace[args,_List:>PySequence[args]]];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Pass*)
+
+
+
 PyAlias@PyPass[]:=
 	PyCommand["pass"][""];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Raise*)
+
 
 
 PyAlias@PyRaise[err_:""]:=
 	PyCommand["raise"][err];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Return*)
+
+
+
 PyAlias@PyReturn[v__]:=
 	PyCommand["return"][v];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Yield*)
+
 
 
 PyAlias@PyYield[v__]:=
@@ -558,8 +645,18 @@ PyAlias@PyYield[v__]:=
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*Infix*)
+
+
+
 PyAlias@PyInfix[o_][a_,b__]:=
 	PyRow[{a,b},o];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Numerics*)
+
 
 
 PyAlias@PyPlus[a_,b__]:=
@@ -590,6 +687,11 @@ PyAlias@PyFloorDiv[a_,b__]:=
 	PyInfix["//"][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Relations*)
+
+
+
 PyAlias@PyEqual[a_,b__]:=
 	PyInfix["=="][a,b];
 
@@ -610,6 +712,11 @@ PyAlias@PyLessEqual[a_,b__]:=
 	PyInfix["<="][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Booleans*)
+
+
+
 PyAlias@PyAnd[a_,b__]:=
 	PyInfix[" and "][a,b];
 
@@ -618,32 +725,72 @@ PyAlias@PyOr[a_,b__]:=
 	PyInfix[" or "][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*In*)
+
+
+
 PyAlias@PyIn[a_,b__]:=
 	PyInfix[" in "][a,b];
+
+
+(* ::Subsubsection::Closed:: *)
+(*NotIn*)
+
 
 
 PyAlias@PyNotIn[a_,b__]:=
 	PyInfix[" not in "][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Is*)
+
+
+
 PyAlias@PyIs[a_,b__]:=
 	PyInfix[" is "][a,b];
+
+
+(* ::Subsubsection::Closed:: *)
+(*IsNot*)
+
 
 
 PyAlias@PyIsNot[a_,b__]:=
 	PyInfix[" is not "][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Slice*)
+
+
+
 PyAlias@PySlice[a_,b__]:=
 	PyInfix[":"][a,b];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Suite*)
+
 
 
 PyAlias@PySuite[a_,b__]:=
 	PyInfix[";"][a,b]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Dot*)
+
+
+
 PyAlias@PyDot[a_,b__]:=
 	PyInfix["."][a,b];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Assignments*)
+
 
 
 PyAlias@PyAssign[a_,b__]:=
@@ -674,20 +821,45 @@ PyAlias@PyOrEqual[a_,b_]:=
 	PyInfix[" |= "][a,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Prefix*)
+
+
+
 PyAlias@PyPrefix[o_][arg_]:=
 	PyRow[{o,arg}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Not*)
+
 
 
 PyAlias@PyNot[arg_]:=
 	PyPrefix["not "][arg];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Star*)
+
+
+
 PyAlias@PyStar[arg_]:=
 	PyPrefix["*"][arg];
 
 
+(* ::Subsubsection::Closed:: *)
+(*DoubleStar*)
+
+
+
 PyAlias@PyDoubleStar[arg_]:=
 	PyPrefix["**"][arg];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Decorator*)
+
 
 
 PyAlias@PyDecorator[arg_]:=
@@ -699,16 +871,36 @@ PyAlias@PyDecorator[arg_][v__]:=
 		]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Plus*)
+
+
+
 PyAlias@PyPlus[arg_]:=
 	PyPrefix["+"][arg];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Minus*)
+
 
 
 PyAlias@PyMinus[arg_]:=
 	PyPrefix["-"][arg];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Invert*)
+
+
+
 PyAlias@PyInvert[arg_]:=
 	PyPrefix["~"][arg];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Comment*)
+
 
 
 PyAlias@
@@ -718,6 +910,11 @@ PyAlias@
 
 (* ::Subsection:: *)
 (*Blocks*)
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*Class*)
 
 
 
@@ -749,6 +946,11 @@ PyAlias@
 	PyClass[name,inherit][{def,defs}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Def*)
+
+
+
 PyAlias@
 	PyDef[name_,
 		args:(None|_List|_String|_Symbol|_PySymbol|_PyTuple):None][def:{__}]:=
@@ -777,12 +979,22 @@ PyAlias@
 	PyDef[name,inherit][{def,defs}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Try*)
+
+
+
 PyAlias@PyTry[val:{__}]:=
 	PyBlock["try:"][val];
 PyAlias@PyTry[val:Except[_List]]:=
 	PyTry[{val}];
 PyAlias@PyTry[val_,vals__]:=
 	PyTry[{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Except*)
+
 
 
 PyAlias@PyExcept[err_][val:{__}]:=
@@ -793,12 +1005,22 @@ PyAlias@PyExcept[test_][val_,vals__]:=
 	PyExcept[test][{val,vals}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Finally*)
+
+
+
 PyAlias@PyTry[val:{__}]:=
 	PyBlock["try:"][val];
 PyAlias@PyTry[val:Except[_List]]:=
 	PyTry[{val}];
 PyAlias@PyTry[val_,vals__]:=
 	PyTry[{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*For*)
+
 
 
 PyAlias@PyFor[iter_][val:{__}]:=
@@ -809,12 +1031,22 @@ PyAlias@PyFor[iter_][val_,vals__]:=
 	PyFor[iter][{val,vals}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*If*)
+
+
+
 PyAlias@PyIf[test_][val:{__}]:=
 	PyBlock[{"if ",test,":"}][val];
 PyAlias@PyIf[test_][val:Except[_List]]:=
 	PyIf[test][{val}];
 PyAlias@PyIf[test_][val_,vals__]:=
 	PyIf[test][{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*ElIf*)
+
 
 
 PyAlias@PyElIf[test_][val:{__}]:=
@@ -825,12 +1057,22 @@ PyAlias@PyElIf[test_][val_,vals__]:=
 	PyElIf[test][{val,vals}];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Else*)
+
+
+
 PyAlias@PyElse[val:{__}]:=
 	PyBlock["else:"][val];
 PyAlias@PyElse[val:Except[_List]]:=
 	PyElse[{val}];
 PyAlias@PyElse[val_,vals__]:=
 	PyElse[{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Lambda*)
+
 
 
 PyAlias@
@@ -909,12 +1151,22 @@ PyAlias@
 	PyCall[PyLambda[args][a]][b]
 
 
+(* ::Subsubsection::Closed:: *)
+(*While*)
+
+
+
 PyAlias@PyWhile[test_][val:{__}]:=
 	PyBlock[{"while ",test,":"}][val];
 PyAlias@PyWhile[test_][val:Except[_List]]:=
 	PyWhile[test][{val}];
 PyAlias@PyWhile[test_][val_,vals__]:=
 	PyWhile[test][{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*With*)
+
 
 
 PyAlias@PyWith[dec_][val:{__}]:=
@@ -930,8 +1182,18 @@ PyAlias@PyWith[dec_][val_,vals__]:=
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*Index*)
+
+
+
 PyAlias@PyIndex[a_,b__]:=
 	PyRow@Flatten@{a,Map[{PyVerbatim@"[",#,PyVerbatim@"]"}&,{b}]};
+
+
+(* ::Subsubsection::Closed:: *)
+(*Call*)
+
 
 
 PyAlias@PyCall[f_][args___]:=
@@ -941,10 +1203,20 @@ PyAlias@PyCall[f_][args___]:=
 		];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Abs*)
+
+
+
 PyAlias@PyAbs[arg_]:=
 	PyCall["abs"][arg];
 PyAlias@PyAbs:=
 	"abs";
+
+
+(* ::Subsubsection::Closed:: *)
+(*All*)
+
 
 
 PyAlias@PyAll[iter_]:=
@@ -953,10 +1225,20 @@ PyAlias@PyAll:=
 	"all";
 
 
+(* ::Subsubsection::Closed:: *)
+(*Any*)
+
+
+
 PyAlias@PyAny[iter_]:=
 	PyCall["any"][iter]
 PyAlias@PyAny:=
 	"any";
+
+
+(* ::Subsubsection::Closed:: *)
+(*Ascii*)
+
 
 
 PyAlias@PyAscii[arg_]:=
@@ -965,44 +1247,99 @@ PyAlias@PyAscii:=
 	"ascii";
 
 
+(* ::Subsubsection::Closed:: *)
+(*Bin*)
+
+
+
 PyAlias@PyBin[arg_]:=
 	PyCall["bin"][arg]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Bool*)
+
 
 
 PyAlias@PyBool[arg_]:=
 	PyCall["bool"][arg]
 
 
+(* ::Subsubsection::Closed:: *)
+(*ByteArray*)
+
+
+
 PyAlias@PyByteArray[args__]:=
 	PyCall["bytearray"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Bytes*)
+
 
 
 PyAlias@PyBytes[args__]:=
 	PyCall["bytes"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Callable*)
+
+
+
 PyAlias@PyCallable[arg_]:=
 	PyCall["callable"][arg]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Chr*)
+
 
 
 PyAlias@PyChr[i_]:=
 	PyCall["chr"][i]
 
 
+(* ::Subsubsection::Closed:: *)
+(*ClassMethod*)
+
+
+
 PyAlias@PyClassMethod[f_]:=
 	PyCall["classmethod"][f]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Compile*)
+
 
 
 PyAlias@PyCompile[args__]:=
 	PyCall["compile"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Complex*)
+
+
+
 PyAlias@PyComplex[args___]:=
 	PyCall["complex"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*DelAattr*)
+
+
+
 PyAlias@PyDelAttr[args__]:=
 	PyCall["delattr"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Dict*)
+
 
 
 PyAlias@PyDict[i:Except[_List|_Association]]:=
@@ -1011,28 +1348,63 @@ PyAlias@PyDict[i_,args__]:=
 	PyCall["dict"][i,args];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Dir*)
+
+
+
 PyAlias@PyDir[args___]:=
 	PyCall["dir"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*DivMod*)
+
 
 
 PyAlias@PyDivMod[a_,b_]:=
 	PyCall["divmod"][a,b]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Enumerate*)
+
+
+
 PyAlias@PyEnumerate[args__]:=
 	PyCall["enumerate"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Eval*)
+
 
 
 PyAlias@PyEval[args__]:=
 	PyCall["eval"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Exec*)
+
+
+
 PyAlias@PyExec[args__]:=
 	PyCall["exec"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Filter*)
+
+
+
 PyAlias@PyFilter[args__]:=
 	PyCall["filter"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Float*)
+
 
 
 PyAlias@PyFloat[i:Except[_?NumericQ]]:=
@@ -1043,44 +1415,99 @@ PyAlias@PyFloat[]:=
 	PyCall["float"][];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Format*)
+
+
+
 PyAlias@PyFormat[repr_,spec___]:=
 	PyCall["format"][repr,spec]
+
+
+(* ::Subsubsection::Closed:: *)
+(*FrozenSet*)
+
 
 
 PyAlias@PyFrozenSet[args___]:=
 	PyCall["frozenset"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*GetAttr*)
+
+
+
 PyAlias@PyGetAttr[args__]:=
 	PyCall["getattr"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Globals*)
+
 
 
 PyAlias@PyGlobals[]:=
 	PyCall["globals"][]
 
 
+(* ::Subsubsection::Closed:: *)
+(*HasAttr*)
+
+
+
 PyAlias@PyHasAttr[args__]:=
 	PyCall["hasattr"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Hash*)
+
 
 
 PyAlias@PyHash[arg_]:=
 	PyCall["hash"][arg]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Help*)
+
+
+
 PyAlias@PyHelp[args___]:=
 	PyCall["help"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Hex*)
+
 
 
 PyAlias@PyHex[arg_]:=
 	PyCall["hex"][arg]
 
 
+(* ::Subsubsection::Closed:: *)
+(*ID*)
+
+
+
 PyAlias@PyID[obj_]:=
 	PyCall["id"][obj]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Input*)
+
+
+
 PyAlias@PyInput[args___]:=
 	PyCall["input"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Int*)
+
 
 
 PyAlias@PyInt[n:Except[_?NumericQ]]:=
@@ -1089,68 +1516,153 @@ PyAlias@PyInt[n_,b_]:=
 	PyCall["int"][n,b];
 
 
+(* ::Subsubsection::Closed:: *)
+(*IsInstance*)
+
+
+
 PyAlias@PyIsInstance[obj_,tup_]:=
 	PyCall["isinstance"][obj,tup]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IsSubclass*)
+
 
 
 PyAlias@PyIsSubclass[obj_,class_]:=
 	PyCall["issubclass"][obj,class]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Iter*)
+
+
+
 PyAlias@PyIter[iter__]:=
 	PyCall["iter"][iter]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Len*)
+
 
 
 PyAlias@PyLen[arg_]:=
 	PyCall["len"][arg]
 
 
+(* ::Subsubsection::Closed:: *)
+(*List*)
+
+
+
 PyAlias@PyList[l:Except[_List]]:=
 	PyCall["list"][l]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Locals*)
+
 
 
 PyAlias@PyLocals[]:=
 	PyCall["locals"][]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Map*)
+
+
+
 PyAlias@PyMap[f_,iters__]:=
 	PyCall["map"][f,iters]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Max*)
+
 
 
 PyAlias@PyMax[iter_,key___]:=
 	PyCall["max"][iter,key]
 
 
+(* ::Subsubsection::Closed:: *)
+(*MemoryView*)
+
+
+
 PyAlias@PyMemoryView[obj_]:=
 	PyCall["memoryview"][obj]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Min*)
+
 
 
 PyAlias@PyMin[iter_,keys___]:=
 	PyCall["min"][iter,keys]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Next*)
+
+
+
 PyAlias@PyNext[obj_,def___]:=
 	PyCall["next"][obj,def]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Object*)
+
 
 
 PyAlias@PyObject[]:=
 	PyCall["object"][]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Oct*)
+
+
+
 PyAlias@PyOct[arg_]:=
 	PyCall["oct"][arg]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Open*)
+
 
 
 PyAlias@PyOpen[f_,args___]:=
 	PyCall["open"][f,args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Ord*)
+
+
+
 PyAlias@PyOrd[c_]:=
 	PyCall["ord"][c]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Pow*)
+
+
+
 PyAlias@PyPow[x_,y_,z___]:=
 	PyCall["pow"][x,y,z]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Print*)
+
 
 
 PyAlias@PyPrint[args__]:=
@@ -1159,8 +1671,18 @@ PyAlias@PyPrint:=
 	"print";
 
 
+(* ::Subsubsection::Closed:: *)
+(*Property*)
+
+
+
 PyAlias@PyProperty[args___]:=
 	PyCall["property"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Range*)
+
 
 
 PyAlias@PyRange[sp_,ec___]:=
@@ -1172,16 +1694,36 @@ PyAlias@PyRange[sp_,ec___]:=
 		]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Repr*)
+
+
+
 PyAlias@PyRepr[obj_]:=
 	PyCall["repr"][obj]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Reversed*)
+
 
 
 PyAlias@PyReversed[iter_]:=
 	PyCall["reversed"][iter]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Round*)
+
+
+
 PyAlias@PyRound[n_,d___]:=
 	PyCall["round"][n,d]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Set*)
+
 
 
 PyAlias@PySet[]:=
@@ -1190,28 +1732,63 @@ PyAlias@PySet[i:Except[_List]]:=
 	PyCall["set"][i];
 
 
+(* ::Subsubsection::Closed:: *)
+(*SetAttr*)
+
+
+
 PyAlias@PySetAttr[args__]:=
 	PyCall["setattr"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Sorted*)
+
 
 
 PyAlias@PySorted[i_,keys___]:=
 	PyCall["sorted"][i,keys]
 
 
+(* ::Subsubsection::Closed:: *)
+(*StaticMethod*)
+
+
+
 PyAlias@PyStaticMethod[f_]:=
 	PyCall["staticmethod"][f]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Str*)
+
 
 
 PyAlias@PyStr[args___]:=
 	PyCall["str"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Sum*)
+
+
+
 PyAlias@PySum[args__]:=
 	PyCall["sum"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Super*)
+
+
+
 PyAlias@PySuper[args___]:=
 	PyCall["super"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Tuple*)
+
 
 
 PyAlias@PyTuple[]:=
@@ -1220,16 +1797,36 @@ PyAlias@PyTuple[]:=
 	PyCall["tuple"][i];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Type*)
+
+
+
 PyAlias@PyType[args__]:=
 	PyCall["type"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Vars*)
+
 
 
 PyAlias@PyVars[args___]:=
 	PyCall["vars"][args]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Zip*)
+
+
+
 PyAlias@PyZip[args__]:=
 	PyCall["zip"][args]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Sin*)
+
 
 
 PyAlias@
@@ -1240,12 +1837,22 @@ PyAlias@
 			)
 
 
+(* ::Subsubsection::Closed:: *)
+(*Cos*)
+
+
+
 PyAlias@
 	PyCos[q_]:=
 		(
 			ToPython@PyImportSow["math"];
 			PyCall[PyDot["math","cos"]][q]
 			)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Tan*)
+
 
 
 PyAlias@
@@ -1256,12 +1863,22 @@ PyAlias@
 			)
 
 
+(* ::Subsubsection::Closed:: *)
+(*ArcTan*)
+
+
+
 PyAlias@
 	PyArcTan[q__]:=
 		(
 			PyImportSow["math"];
 			PyCall[PyDot["math","arctan"]][q]
 			)
+
+
+(* ::Subsubsection::Closed:: *)
+(*ArcCos*)
+
 
 
 PyAlias@
@@ -1272,12 +1889,22 @@ PyAlias@
 			)
 
 
+(* ::Subsubsection::Closed:: *)
+(*ArcSin*)
+
+
+
 PyAlias@
 	PyArcSin[q__]:=
 		(
 			PyImportSow["math"];
 			PyCall[PyDot["math","arcsin"]][q]
 			)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Sqrt*)
+
 
 
 PyAlias@
@@ -1293,6 +1920,11 @@ PySqrt[a_]:=
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*FromImport*)
+
+
+
 PyAlias@
 	PyImportAs[import_,as_]:=
 		PyRow[{PyImport[import],PyAs[as]}," "];
@@ -1304,12 +1936,22 @@ PyAlias@
 		PyRow[{PyFrom[from],PyImport[import],PyAs[as]}," "];
 
 
+(* ::Subsubsection::Closed:: *)
+(*IfElse*)
+
+
+
 PyAlias@
 	PyIfElse[test_][if_,else_]:=
 		PyColumn[
 			PyIf[test],
 			PyElse[else]
 			];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Which*)
+
 
 
 PyAlias@
@@ -1325,12 +1967,22 @@ PyAlias@
 			]
 
 
+(* ::Subsubsection::Closed:: *)
+(*ForIn*)
+
+
+
 PyAlias@PyForIn[var_,iter_][val:{__}]:=
 	PyFor[PyIn[var,iter]][val];
 PyAlias@PyForIn[var_,iter_][val:Except[_List]]:=
 	PyForIn[var,iter][{val}];
 PyAlias@PyForIn[var_,iter_][val_,vals__]:=
 	PyForIn[var,iter][{val,vals}];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Magic*)
+
 
 
 PyAlias@
@@ -1341,6 +1993,11 @@ PyAlias@
 		PyCall[PyMagic[s]][a];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Private*)
+
+
+
 PyAlias@
 	PyPrivate[s_String]:=
 		"__"<>s;
@@ -1349,8 +2006,18 @@ PyAlias@
 		PyCall[PyPrivate[s]][a];
 
 
+(* ::Subsubsection::Closed:: *)
+(*Conditional*)
+
+
+
 PyAlias@PyConditional[test_][if_,else_]:=
 	PyRow[{if,"if",test,"else",else}," "];
+
+
+(* ::Subsubsection::Closed:: *)
+(*ListComprehension*)
+
 
 
 PyAlias[PyListComprehension[expr_,iter:Except[_List|_Integer]]]:=
@@ -1363,6 +2030,11 @@ PyAlias[PyListComprehension[expr_,n_Integer]]:=
 	PyListComprehension[expr,{"_iter_counter",n}]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Generator*)
+
+
+
 PyAlias[PyGenerator[expr_,iter:Except[_List|_Integer]]]:=
 	PyRow[{"(",expr,iter,")"}," "];
 PyAlias[PyGenerator[expr_,{var_,iter:Except[_Integer]}]]:=
@@ -1371,6 +2043,11 @@ PyAlias[PyGenerator[expr_,{var_,nspec__Integer}]]:=
 	PyGenerator[expr,PyRow[{"for",var,"in",PyRange[nspec]}," "]];
 PyAlias[PyGenerator[expr_,n_Integer]]:=
 	PyGenerator[expr,{"itercounter",n}]
+
+
+(* ::Subsubsection::Closed:: *)
+(*DictComprehension*)
+
 
 
 PyAlias[PyDictComprehension[expr_,iter:Except[_List|_Integer]]]:=
@@ -1388,9 +2065,19 @@ PyAlias[PyDictComprehension[expr_,n_Integer]]:=
 	PyDictComprehension[expr,{"itercounter",n}]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IfMain*)
+
+
+
 PyAlias@
 	PyIfMain[expr_]:=
 		PyIf["__name__"~PyEqual~PyString["__main__"]][expr];
+
+
+(* ::Subsubsection::Closed:: *)
+(*$SysPath*)
+
 
 
 PyAlias@
@@ -1401,6 +2088,11 @@ $PySysPath:=
 		)
 
 
+(* ::Subsubsection::Closed:: *)
+(*SysPathInsert*)
+
+
+
 PyAlias@
 PySysPathInsert[o_:0,p_]:=
 	(
@@ -1409,8 +2101,33 @@ PySysPathInsert[o_:0,p_]:=
 		)
 
 
+(* ::Subsubsection::Closed:: *)
+(*PyWithAs*)
+
+
+
+PyAlias@
+	PyWithAs[arg_, name_][block__]:=
+		PyWith[PyAs[arg, name]][block]
+
+
+(* ::Subsubsection::Closed:: *)
+(*WithOpenAs*)
+
+
+
+PyAlias@
+	PyWithOpenAs[file_, name_][block__]:=
+		PyWithAs[PyOpen@@Flatten[{file}], name][block]
+
+
 (* ::Subsection:: *)
 (*Mathematica Constructs*)
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*Module*)
 
 
 
@@ -1419,9 +2136,19 @@ PyAlias@
 		PyColumn[e,PyIfMain[ifm]]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Subdivide*)
+
+
+
 PyAlias@
 	PySubdivide[min_,max_,n_]:=
 		PyRange[min,max,(max-min)/n]
+
+
+(* ::Subsubsection::Closed:: *)
+(*FromSphericalCoordinates*)
+
 
 
 $PyFromSphericalCoordinates=
@@ -1441,6 +2168,11 @@ PyFromSphericalCoordinates[{r_,q_,j_}]:=
 PyAlias@
 PyFromSphericalCoordinates[e_]:=
 	PyCall[$PyFromSphericalCoordinates][e]
+
+
+(* ::Subsubsection::Closed:: *)
+(*ToSphericalCoordinates*)
+
 
 
 $PyToSphericalCoordinates=
@@ -1465,6 +2197,11 @@ PyToSphericalCoordinates[e_]:=
 	PyCall[$PyToSphericalCoordinates][e]
 
 
+(* ::Subsubsection::Closed:: *)
+(*StringToStream*)
+
+
+
 PyAlias@
 PyStringToStream[s_]:=
 	(
@@ -1473,9 +2210,19 @@ PyStringToStream[s_]:=
 		)
 
 
+(* ::Subsubsection::Closed:: *)
+(*MemberQ*)
+
+
+
 PyAlias@
 PyMemberQ[obj_,thing_]:=
 	PyIn[thing,obj]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Do*)
+
 
 
 PyAlias@
@@ -1495,9 +2242,19 @@ PyDo[f_,{var_,start_,stop_,step_}]:=
 	PyFor[PyIn[var,PyRange[start,stop]]][PyColumn[{f, None}]]
 
 
+(* ::Subsubsection::Closed:: *)
+(*Scan*)
+
+
+
 PyAlias@
 PyScan[f_,vals_]:=
 	PyFor[PyIn["_iteration_var",vals]][f["_iteration_var"]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Function*)
+
 
 
 PyAlias@
@@ -1534,12 +2291,22 @@ PyFunction[vars_,f_,___]:=
 		If[ListQ@f,{f},f];
 
 
+(* ::Subsubsection::Closed:: *)
+(*MapIndexed*)
+
+
+
 PyAlias@
 PyMapIndexed[f_,l_]:=
 	PyListComprehension[
 		f["_iteration_val","_iteration_index"],
 		{{"_iteration_val","_iteration_index"},PyEnumerate[l]}
 		]
+
+
+(* ::Subsubsection::Closed:: *)
+(*ScanIndexed*)
+
 
 
 PyAlias@
@@ -1549,8 +2316,24 @@ PyScanIndexed[f_,l_]:=
 		]
 
 
+(* ::Subsubsection::Closed:: *)
+(*StringRiffle*)
+
+
+
 PyAlias@PyStringRiffle[l_,x_]:=
 	PyCall[PyDot[PyString[x],"join"]][l]
+
+
+(* ::Subsubsection::Closed:: *)
+(*ReadString*)
+
+
+
+PyAlias@PyReadString[l_,x_]:=
+	PyWithOpenAs[l, PySymbol["_pyVar_file_tmp"]][
+		PyDot[PySymbol["_pyVar_file_tmp"], "read"][]
+		]
 
 
 (* ::Subsection:: *)
@@ -1652,6 +2435,16 @@ $PyLangTranslations=
 		Do->PyDo,
 		Scan->PyScan,
 		Function->PyFunction,
+		ReadString->PyReadString,
+		Open->PyOpen,
+		
+		HoldPattern@
+			Verbatim[With][{Set[var_, val_]}, arg_]:>
+				PyWithAs[val, var][arg],
+		HoldPattern@
+			Verbatim[With][{Set[var_, val_], r__Set}, arg_]:>
+				PyWithAs[val, var][With[{r}, arg]],
+		
 		HoldPattern@
 			MapIndexed[(h:Function|PyFunction)[a___,CompoundExpression[f__,Null]],l_]:>
 			PyScanIndexed[h[a,CompoundExpression[f]],l],
