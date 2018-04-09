@@ -651,7 +651,7 @@ PyAlias@PyYield[v__]:=
 
 
 PyAlias@PyInfix[o_][a_,b__]:=
-	PyRow[{a,b},o];
+	PyRow[{"(",a,b,")"},o];
 
 
 (* ::Subsubsection::Closed:: *)
